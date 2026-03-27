@@ -12,7 +12,9 @@ public class EmployControl {
     public boolean checkEmployUse() {
         try {
             mysql.open();
-            
+            if (mysql.getConnection() == null) {
+                return false;
+            }
             String sql = "select P_EmpUse from posconfigsetup where P_EmpUse='Y';";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {

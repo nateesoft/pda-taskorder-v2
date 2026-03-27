@@ -1,8 +1,11 @@
 package com.ics.pdatakeorder.servlet;
 
+import com.ics.pdatakeorder.control.EmployControl;
+import com.ics.pdatakeorder.db.MySQLConnect;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,19 +31,34 @@ public class Welcome extends HttpServlet {
             session.setAttribute("empCode", "");
             session.setAttribute("custCount", "");
             session.setAttribute("saleType", "");
-
-            RequestDispatcher req = request.getRequestDispatcher("/login.jsp");
-            req.forward(request, response);
         } else {
             session.setAttribute("tableNo", "");
             session.setAttribute("macno", macno);
             session.setAttribute("empCode", "");
             session.setAttribute("custCount", "");
             session.setAttribute("saleType", "");
-
-            RequestDispatcher req = request.getRequestDispatcher("/login.jsp");
-            req.forward(request, response);
         }
+
+        // Prepare attributes for login.jsp
+        request.setAttribute("dbName", MySQLConnect.DB);
+
+        EmployControl empCon = new EmployControl();
+        request.setAttribute("showEmployField", empCon.checkEmployUse());
+
+        String cEmpCode = "";
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("c_empcode")) {
+                    cEmpCode = c.getValue();
+                    break;
+                }
+            }
+        }
+        request.setAttribute("cEmpCode", cEmpCode);
+
+        RequestDispatcher req = request.getRequestDispatcher("/login.jsp");
+        req.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
