@@ -4,19 +4,21 @@ import com.ics.pdatakeorder.db.MySQLConnect;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ControlMenu {
-    
-    private ArrayList<CompanyMenu> companyMenu;
+
+    private final MySQLConnect mysql = new MySQLConnect();
+    private final List<CompanyMenu> companyMenu;
     int size = 0;
-//    public MySQLConnect c =new MySQLConnect();
-    
-    public ControlMenu(){
+
+    public ControlMenu() {
         companyMenu = new ArrayList<>();
     }
 
-    public ArrayList<MenuSetup> getDataMenu(String prefix) {
-        ArrayList<MenuSetup> listMenu = new ArrayList<>();
+    public List<MenuSetup> getDataMenu(String prefix) {
+        List<MenuSetup> listMenu = new ArrayList<>();
         MenuSetup menu;
         String search;
 
@@ -27,86 +29,83 @@ public class ControlMenu {
             } else {
                 search = prefix + index;
             }
-MySQLConnect mysql =new MySQLConnect();
+            
             try {
                 mysql.open();
                 String sql = "select Code_ID, ShortName,Code_Type,PCode "
                         + "from menusetup "
                         + "where Code_ID='" + search + "'";
-                //System.out.println(sql);
-                ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-                if (rs.next()) {
-                    menu = new MenuSetup();
-                    menu.setCode_ID(rs.getString("Code_ID"));
-                    menu.setCode_Type(rs.getString("Code_Type"));
-                    menu.setShortName(ThaiUtil.ASCII2Unicode(rs.getString("ShortName")));
-                    menu.setPCode(rs.getString("PCode"));
-
-                    String test = menu.getShortName();
-                    String[] t = test.split(" ");
-                    String plus = "";
-                    for (int aa = 0; aa < t.length; aa++) {
-                        if (t[aa].equals("")) {
-
-                        } else {
-                            if (aa == t.length - 1) {
-                                plus += t[aa];
+                try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                    if (rs.next()) {
+                        menu = new MenuSetup();
+                        menu.setCode_ID(rs.getString("Code_ID"));
+                        menu.setCode_Type(rs.getString("Code_Type"));
+                        menu.setShortName(ThaiUtil.ASCII2Unicode(rs.getString("ShortName")));
+                        menu.setPCode(rs.getString("PCode"));
+                        
+                        String test = menu.getShortName();
+                        String[] t = test.split(" ");
+                        String plus = "";
+                        for (int aa = 0; aa < t.length; aa++) {
+                            if (t[aa].equals("")) {
+                                
                             } else {
-                                plus += t[aa] + "<br />";
+                                if (aa == t.length - 1) {
+                                    plus += t[aa];
+                                } else {
+                                    plus += t[aa] + "<br />";
+                                }
                             }
                         }
-                    }
-
-                    menu.setShortName(plus);
-
-                    if (!menu.getPCode().equals("")) {
-                        try {
-                            String sql2 = "select pcode,pstatus "
-                                    + "from product "
-                                    + "where pstatus='s' "
-                                    + "and pcode='" + menu.getPCode() + "';";
-                            ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sql2);
-                            if (rs2.next()) {
-                                menu = new MenuSetup();
-                                menu.setCode_ID(search);
-                                menu.setShortName("");
-                                menu.setCode_Type("");
-                                listMenu.add(menu);
-                            } else {
-                                listMenu.add(menu);
+                        
+                        menu.setShortName(plus);
+                        
+                        if (!menu.getPCode().equals("")) {
+                            try {
+                                String sql2 = "select pcode,pstatus "
+                                        + "from product "
+                                        + "where pstatus='s' "
+                                        + "and pcode='" + menu.getPCode() + "';";
+                                ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sql2);
+                                if (rs2.next()) {
+                                    menu = new MenuSetup();
+                                    menu.setCode_ID(search);
+                                    menu.setShortName("");
+                                    menu.setCode_Type("");
+                                    listMenu.add(menu);
+                                } else {
+                                    listMenu.add(menu);
+                                }
+                            } catch (SQLException e) {
+                                System.err.println(e.getMessage());
                             }
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
+                        } else {
+                            listMenu.add(menu);
                         }
                     } else {
+                        menu = new MenuSetup();
+                        menu.setCode_ID(search);
+                        menu.setShortName("");
+                        menu.setCode_Type("");
                         listMenu.add(menu);
                     }
-                } else {
-                    menu = new MenuSetup();
-                    menu.setCode_ID(search);
-                    menu.setShortName("");
-                    menu.setCode_Type("");
-                    listMenu.add(menu);
                 }
 
-                rs.close();
-                
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
-            }finally{
+            } finally {
                 mysql.close();
             }
-            
+
         }
 
         return listMenu;
     }
 
-    public ArrayList<MenuSetup> getDataMenuSearch(String search) {
-        ArrayList<MenuSetup> listBean = new ArrayList<>();
-        MySQLConnect mysql =new MySQLConnect();
+    public List<MenuSetup> getDataMenuSearch(String search) {
+        List<MenuSetup> listBean = new ArrayList<>();
         try {
-            
+
             mysql.open();
             String sql = "select m.* "
                     + "from product p,menusetup m "
@@ -116,27 +115,27 @@ MySQLConnect mysql =new MySQLConnect();
                     + "and PActive='Y' "
                     + "and m.pcode<>'' "
                     + "and shortname like '%" + ThaiUtil.Unicode2ASCII(search) + "%';";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            while (rs.next()) {
-                MenuSetup m = new MenuSetup();
-                m.setPCode(rs.getString("PCode"));
-                m.setShortName(ThaiUtil.ASCII2Unicode(rs.getString("ShortName")));
-
-                listBean.add(m);
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                while (rs.next()) {
+                    MenuSetup m = new MenuSetup();
+                    m.setPCode(rs.getString("PCode"));
+                    m.setShortName(ThaiUtil.ASCII2Unicode(rs.getString("ShortName")));
+                    
+                    listBean.add(m);
+                }
             }
-            rs.close();
-            
-        } catch (Exception e) {
+
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
 
         return listBean;
     }
-    public ArrayList<MenuSetup> getDataMenuSearchByCode(String search) {
-        ArrayList<MenuSetup> listBean = new ArrayList<>();
-        MySQLConnect mysql =new MySQLConnect();
+
+    public List<MenuSetup> getDataMenuSearchByCode(String search) {
+        List<MenuSetup> listBean = new ArrayList<>();
         try {
             mysql.open();
             String sql = "select m.* "
@@ -146,23 +145,21 @@ MySQLConnect mysql =new MySQLConnect();
                     + "and PStatus='P' "
                     + "and PActive='Y' "
                     + "and m.pcode<>'' "
-//                    + "and m.pcode like '%" + ThaiUtil.Unicode2ASCII(search) + "%';";
                     + "and m.pcode =" + ThaiUtil.Unicode2ASCII(search) + "';";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            while (rs.next()) {
-                MenuSetup m = new MenuSetup();
-                m.setPCode(rs.getString("PCode"));
-                m.setShortName(ThaiUtil.ASCII2Unicode(rs.getString("ShortName")));
-
-                listBean.add(m);
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                while (rs.next()) {
+                    MenuSetup m = new MenuSetup();
+                    m.setPCode(rs.getString("PCode"));
+                    m.setShortName(ThaiUtil.ASCII2Unicode(rs.getString("ShortName")));
+                    
+                    listBean.add(m);
+                }
             }
 
-            rs.close();
-           
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }finally{
-             mysql.close();
+        } finally {
+            mysql.close();
         }
 
         return listBean;
@@ -170,35 +167,31 @@ MySQLConnect mysql =new MySQLConnect();
 
     public String[] getHeaderMenu() {
         String hMenu = "";
-        MySQLConnect mysql =new MySQLConnect();
         try {
             mysql.open();
             String sqlHead = "select head1, head2, head3, head4 from headmenu";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlHead);
-            if (rs.next()) {
-                hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head1")) + ",";
-                hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head2")) + ",";
-                hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head3")) + ",";
-                hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head4"));
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlHead)) {
+                if (rs.next()) {
+                    hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head1")) + ",";
+                    hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head2")) + ",";
+                    hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head3")) + ",";
+                    hMenu += ThaiUtil.ASCII2Unicode(rs.getString("head4"));
+                }
             }
-
-            rs.close();
-           
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }finally{
-            mysql.close(); 
+        } finally {
+            mysql.close();
         }
         return hMenu.split(",", hMenu.length());
     }
-    
-    public ArrayList<CompanyMenu> getAllMenu() {
+
+    public List<CompanyMenu> getAllMenu() {
         String sqlHead = "select head1, head2, head3, head4 from headmenu";
-MySQLConnect mysql =new MySQLConnect();
         try {
             mysql.open();
             ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlHead);
-            if(rs!=null){
+            if (rs != null) {
                 if (rs.next()) {
                     String head1 = ThaiUtil.ASCII2Unicode(rs.getString("head1"));
                     String head2 = ThaiUtil.ASCII2Unicode(rs.getString("head2"));
@@ -219,35 +212,32 @@ MySQLConnect mysql =new MySQLConnect();
                                     + "where code_id like '" + mmenu[index] + "%' "
                                     + "and Code_Type='" + CompanyMenu.TYPE_GROUP + "' "
                                     + "group by Code_ID";
-    //                            System.out.println("head by: "+sql);
-                            ResultSet rs1 = mysql.getConnection().createStatement().executeQuery(sql);
-                            while (rs1.next()) {
-                                MenuSetup menu = new MenuSetup();
-                                menu.setCode_ID(rs1.getString("Code_ID"));
-                                menu.setCode_Type(rs1.getString("Code_Type"));
-                                menu.setPCode(rs1.getString("PCode"));
-                                menu.setShortName(ThaiUtil.ASCII2Unicode(rs1.getString("ShortName")));
-                                menu.setPPathName(ThaiUtil.ASCII2Unicode(rs1.getString("PPathName")));
-
-                                String sqlProduct = "select * from menusetup "
-                                        + "where Code_Id like '" + menu.getCode_ID() + "%' "
-                                        + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
-                                        + "and shortName<>'' "
-                                        + "group by Code_ID";
-    //                                System.out.println("product by : "+sqlProduct);
-                                ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlProduct);
-                                while (rs2.next()) {
-                                    ProductBean product = new ProductBean();
-                                    product.setPCode(rs2.getString("Code_ID"));
-                                    product.setPDesc(ThaiUtil.ASCII2Unicode(rs2.getString("ShortName")));
-
-                                    menu.addProduct(product);
+                            try (ResultSet rs1 = mysql.getConnection().createStatement().executeQuery(sql)) {
+                                while (rs1.next()) {
+                                    MenuSetup menu = new MenuSetup();
+                                    menu.setCode_ID(rs1.getString("Code_ID"));
+                                    menu.setCode_Type(rs1.getString("Code_Type"));
+                                    menu.setPCode(rs1.getString("PCode"));
+                                    menu.setShortName(ThaiUtil.ASCII2Unicode(rs1.getString("ShortName")));
+                                    menu.setPPathName(ThaiUtil.ASCII2Unicode(rs1.getString("PPathName")));
+                                    
+                                    String sqlProduct = "select * from menusetup "
+                                            + "where Code_Id like '" + menu.getCode_ID() + "%' "
+                                            + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
+                                            + "and shortName<>'' "
+                                            + "group by Code_ID";
+                                    try (ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlProduct)) {
+                                        while (rs2.next()) {
+                                            ProductBean product = new ProductBean();
+                                            product.setPCode(rs2.getString("Code_ID"));
+                                            product.setPDesc(ThaiUtil.ASCII2Unicode(rs2.getString("ShortName")));
+                                            
+                                            menu.addProduct(product);
+                                        }
+                                    }
+                                    headMenu.addMenuSetup(menu);
                                 }
-
-                                rs2.close();
-                                headMenu.addMenuSetup(menu);
                             }
-                            rs1.close();
                             companyMenu.add(headMenu);
                             size++;
                         }
@@ -255,11 +245,11 @@ MySQLConnect mysql =new MySQLConnect();
                     }
                 }
                 rs.close();
-                
+
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
 

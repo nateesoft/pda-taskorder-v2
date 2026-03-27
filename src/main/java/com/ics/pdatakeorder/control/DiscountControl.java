@@ -3,8 +3,11 @@ package com.ics.pdatakeorder.control;
 import com.ics.pdatakeorder.model.POSConfigSetup;
 import com.ics.pdatakeorder.db.MySQLConnect;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DiscountControl {
+    
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public static double getDouble(double db) {
         if (POSConfigSetup.Bean().getP_DiscRound().equals("F")) {
@@ -15,9 +18,7 @@ public class DiscountControl {
     }
 
     public void updateDiscount(String tableNo) {
-        MySQLConnect mysql = new MySQLConnect();
         try {
-
             mysql.open();
             String sql = "select sum(R_PrAmt+R_DiscBath) R_PrAmt "
                     + "from balance "
@@ -25,14 +26,14 @@ public class DiscountControl {
                     + "and R_Discount='Y' "
                     + "group by R_Table "
                     + "order by R_Index;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            if (rs.next()) {
-                String sqlUpd = "update tablefile set ItemDiscAmt='" + rs.getDouble("R_PrAmt") + "'";
-                mysql.getConnection().createStatement().executeUpdate(sqlUpd);
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                if (rs.next()) {
+                    String sqlUpd = "update tablefile set ItemDiscAmt='" + rs.getDouble("R_PrAmt") + "'";
+                    mysql.getConnection().createStatement().executeUpdate(sqlUpd);
+                }
             }
-            rs.close();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
             mysql.close();

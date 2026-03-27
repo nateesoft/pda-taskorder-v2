@@ -11,8 +11,9 @@ public class MacnoControl {
     public static int NO_CONNECTION = 3;
     public static int NOT_FOUND_MACNO = 4;
     
+    private static final MySQLConnect mysql= new MySQLConnect();
+    
     public static int checkMacno(String macno){
-        MySQLConnect mysql= new MySQLConnect();
         try {
             mysql.open();
             String sql = "select * "

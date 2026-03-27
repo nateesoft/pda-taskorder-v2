@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="com.ics.pdatakeorder.control.BalanceControl"%>
 <%@page import="com.ics.pdatakeorder.model.BalanceBean"%>
@@ -56,7 +57,7 @@
                 if (table == null) {
                     table = "";
                 }
-                ArrayList<BalanceBean> listBalance = bc.getAllBalanceNew(table);
+                List<BalanceBean> listBalance = bc.getAllBalanceNew(table);
                 if (listBalance == null) {
                     listBalance = new ArrayList();
                 }

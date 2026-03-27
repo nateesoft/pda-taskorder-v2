@@ -4,7 +4,6 @@ import com.ics.pdatakeorder.model.PrintCheckBillReport;
 import com.ics.pdatakeorder.db.ConfigFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.ics.pdatakeorder.util.MSG;
 
 /**
  *
@@ -21,15 +20,10 @@ public class printCheckBillStation {
         this.PrinterName = PrinterName;
         this.Macno = Macno;
         if (ConfigFile.getProperties("printerStation").equals("true")) {
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    printProcess();
-                }
+            new Thread(() -> {
+                printProcess();
             }).start();
         } else {
-            MSG.NOTICE("ไม่ได้กำหนดให้ printerStation ใช้งาน");
             System.out.print("ไม่ได้กำหนดให้ printerStation ใช้งาน \nกรุณาชำระเงินที่แคชเชียร์");
         }
     }

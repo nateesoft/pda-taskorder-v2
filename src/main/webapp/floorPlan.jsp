@@ -1,9 +1,3 @@
-<%-- 
-    Document   : floorPlan
-    Created on : Mar 6, 2025, 10:26:18 AM
-    Author     : Administrator
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

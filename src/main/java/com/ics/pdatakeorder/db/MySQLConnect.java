@@ -17,8 +17,8 @@ public class MySQLConnect {
     public static String charset;
     public static String fontSize;
     public static String inputTable;
-
-    public void initLoadFileConfig() {
+    
+    static {
         server = "localhost";
         db = "MyRestaurantPaiboon";
         DB = "MyRestaurantPaiboon";
@@ -31,12 +31,9 @@ public class MySQLConnect {
     }
 
     public void open() {
-        initLoadFileConfig();
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            if (connect == null) {
-                connect = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + db + "?characterEncoding=utf-8", username, password);
-            }
+            connect = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + db + "?characterEncoding=utf-8", username, password);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

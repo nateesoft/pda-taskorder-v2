@@ -1,12 +1,12 @@
 package com.ics.pdatakeorder.model;
 
-import com.ics.pdatakeorder.model.MenuSetup;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyMenu {
     
     private String headName;
-    private ArrayList<MenuSetup> menuSetupData;
+    private List<MenuSetup> menuSetupData;
     public static final String TYPE_PRODUCT = "P";
     public static final String TYPE_GROUP = "S";
     
@@ -18,7 +18,7 @@ public class CompanyMenu {
         menuSetupData.add(menu);
     }
     
-    public ArrayList<MenuSetup> getAllMenuSetup(){
+    public List<MenuSetup> getAllMenuSetup(){
         return menuSetupData;
     }
     

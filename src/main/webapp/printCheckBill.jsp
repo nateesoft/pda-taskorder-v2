@@ -16,14 +16,11 @@
             function printClick() {
                 var table = document.getElementById("txtTableNo").value;
                 var prefix = document.getElementById("txtPrefix").value;
-//            var table = (String);
-//            session.getAttribute("tableNo");
                 var clickPrint = document.getElementById("print").value;
                 var clickPrintAll = document.getElementById("printAll").value;
             }
         </script>
         <%
-            EmployControl empCon = new EmployControl();
             Cookie[] cookies = request.getCookies();
             String cEmpCode = "";
             if (cookies != null) {

@@ -1,4 +1,3 @@
-
 <%@page import="com.ics.pdatakeorder.model.PKicTran"%>
 <%@page import="com.ics.pdatakeorder.control.EmployControl"%>
 <%@page import="com.ics.pdatakeorder.model.ControlPrintCheckBill"%>
@@ -15,21 +14,18 @@
         %>
         <script type="text/javascript">
             function printClick() {
-            var table = document.getElementById("txtTableNo").value;
-                    var prefix = document.getElementById("txtPrefix").value;
-                    var table = (String);
-                    session.getAttribute("tableNo");
-                    var clickPrint = document.getElementById("print").value;
+                var table = document.getElementById("txtTableNo").value;
+                var prefix = document.getElementById("txtPrefix").value;
+                var table = (String);
+                session.getAttribute("tableNo");
+                var clickPrint = document.getElementById("print").value;
         </script>
         <%
-            EmployControl empCon = new EmployControl();
             Cookie[] cookies = request.getCookies();
-            String cEmpCode = "";
             if (cookies != null) {
                 for (int i = 0; i < cookies.length; i++) {
                     Cookie c = (Cookie) cookies[i];
                     if (c.getName().equals("c_empcode")) {
-                        cEmpCode = c.getValue();
                         break;
                     }
                 }
@@ -49,13 +45,13 @@
         %>
         <div align="center"> 
             <p><a href="OrderOld.jsp?prefix=<%=prefix%>">
-            <input type="button" name="print" id="print" value="ระบบกำลังแจ้งเตือนห้องครัว!" onclick=""  style="width: 100%; height: 80px; font-size: 30px; background-color:#B22222; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
-            </p>
-        </div>
-        <div align="center">
-        <p><a href="main.jsp?prefix=<%=prefix%>">                
-                <input type="button" name="button" id="button20" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
-            </a></p>
-    </div>
-    </body>
-</html>
+                    <input type="button" name="print" id="print" value="ระบบกำลังแจ้งเตือนห้องครัว!" onclick=""  style="width: 100%; height: 80px; font-size: 30px; background-color:#B22222; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
+                    </p>
+                    </div>
+                    <div align="center">
+                        <p><a href="main.jsp?prefix=<%=prefix%>">                
+                                <input type="button" name="button" id="button20" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
+                            </a></p>
+                    </div>
+                    </body>
+                    </html>

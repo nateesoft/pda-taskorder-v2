@@ -1,8 +1,8 @@
-<%@page import="chocolate.control.CompanyMenu"%>
-<%@page import="chocolate.control.MacnoControl"%>
-<%@page import="database.MySQLConnect"%>
+<%@page import="java.util.List"%>
+<%@page import="com.ics.pdatakeorder.model.ControlMenu"%>
+<%@page import="com.ics.pdatakeorder.model.CompanyMenu"%>
+<%@page import="com.ics.pdatakeorder.control.MacnoControl"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="control.ControlMenu"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -139,7 +139,7 @@
                         <tr>
                             <%
                                 ControlMenu cm = new ControlMenu();
-                                ArrayList<CompanyMenu> list = cm.getAllMenu();
+                                List<CompanyMenu> list = cm.getAllMenu();
 
                             %>
                             <% String[] data = new String[]{"A", "B", "C", "D"};%>

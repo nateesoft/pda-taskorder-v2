@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="com.ics.pdatakeorder.db.MySQLConnect"%>
 <%@page import="com.ics.pdatakeorder.model.MenuSetup"%>
 <%@page import="java.util.ArrayList"%>
@@ -9,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>PDA-SOFTPOS-V2.0</title>
+        <title>PDA-ICS</title>
         <script type="text/javascript" src="jquery-latest.min.js"></script>
         <script type="text/javascript" src="pda.js"></script>
         <link rel="stylesheet" type="text/css" href="pda.css">
@@ -204,7 +205,7 @@
                 <table width="100%" border="0">
                     <tr>
                         <%
-                            ArrayList<MenuSetup> list = cm.getDataMenu(prefix);
+                            List<MenuSetup> list = cm.getDataMenu(prefix);
                             for (int i = 0; i < list.size(); i++) {
                                 MenuSetup menu = (MenuSetup) list.get(i);
                                 String bgColor = "#33CC66";

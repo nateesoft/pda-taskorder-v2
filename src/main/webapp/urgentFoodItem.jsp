@@ -1,12 +1,5 @@
-<%-- 
-    Document   : newjsp
-    Created on : May 23, 2025, 6:32:49 PM
-    Author     : Administrator
---%>
-
 <%@page import="com.ics.pdatakeorder.model.FollowItemFoodUrgent"%>
 <%@page import="com.ics.pdatakeorder.control.EmployControl"%>
-<%@page import="com.ics.pdatakeorder.db.MySQLConnect"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -33,15 +26,12 @@
     </dir>
 
     <%
-        MySQLConnect mysql = new MySQLConnect();
-
         try {
             String tableNo = (String) session.getAttribute("tableNo");
             String pluCode = request.getParameter("pluCode");
             String pluName = request.getParameter("pluName");
             String pindex = request.getParameter("pindex");
-            mysql.open();
-            System.out.println(tableNo + "PluName = " + pluCode + pluName + pindex);
+            
             FollowItemFoodUrgent fl = new FollowItemFoodUrgent();
             fl.FollowItemFoodUrgentByItem(tableNo, pluCode, pluName, pindex);
         } catch (Exception e) {

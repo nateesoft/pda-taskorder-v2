@@ -7,8 +7,8 @@
         <script src="jquery.min.js"></script>
         <script src="toastr.js"></script>
         <script type="text/javascript">
-            $(function() {
-                $('#showtoast').click(function() {
+            $(function () {
+                $('#showtoast').click(function () {
                     toastr.options = {
                         "closeButton": false,
                         "debug": false,

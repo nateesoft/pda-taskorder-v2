@@ -1,6 +1,7 @@
 package com.ics.pdatakeorder.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuSetup {
 
@@ -18,7 +19,7 @@ public class MenuSetup {
     }
     private String ShortName;
     private String PPathName;
-    private ArrayList<ProductBean> productList;
+    private List<ProductBean> productList;
 
     public MenuSetup() {
         productList = new ArrayList<>();
@@ -36,7 +37,7 @@ public class MenuSetup {
         productList.add(product);
     }
 
-    public ArrayList<ProductBean> getAllProduct() {
+    public List<ProductBean> getAllProduct() {
         return productList;
     }
 

@@ -82,7 +82,7 @@ public class Value {
                 ds.close();
             }
         } catch (IOException e) {
-            MSG.ERR(e.getMessage());
+            System.err.println(e.getMessage());
             macno = "";
         }
 
@@ -100,7 +100,7 @@ public class Value {
                     }
                 }
             } catch (SQLException e) {
-                MSG.ERR(e.getMessage());
+                System.err.println(e.getMessage());
                 macno = "";
             } finally {
                 mysql.close();

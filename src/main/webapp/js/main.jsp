@@ -1,10 +1,10 @@
-<%@page import="sun.natee.project.util.ToUTF8"%>
-<%@page import="control.MenuSetup"%>
+<%@page import="com.ics.pdatakeorder.model.ControlMenu"%>
+<%@page import="com.ics.pdatakeorder.control.BalanceControl"%>
+<%@page import="com.ics.pdatakeorder.db.MySQLConnect"%>
+<%@page import="com.ics.pdatakeorder.model.MenuSetup"%>
+<%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="control.ControlMenu"%>
-<%@page import="database.MySQLConnect"%>
 <%@page import="java.text.DecimalFormat"%>
-<%@page import="control.BalanceControl"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -197,7 +197,7 @@
             <table width="100%" border="0">
                 <tr>
                     <%
-                        ArrayList<MenuSetup> list = cm.getDataMenu(prefix);
+                        List<MenuSetup> list = cm.getDataMenu(prefix);
                         for (int i = 0; i < list.size(); i++) {
                             MenuSetup menu = (MenuSetup) list.get(i);
                             String bgColor = "#33CC66";

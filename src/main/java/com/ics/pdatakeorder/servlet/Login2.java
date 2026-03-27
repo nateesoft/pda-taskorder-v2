@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "Login2", urlPatterns = {"/Login2"})
 public class Login2 extends HttpServlet {
@@ -29,7 +29,7 @@ public class Login2 extends HttpServlet {
         }
 
         BalanceControl bControl = new BalanceControl();
-        ArrayList<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
+        List<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
 
         request.setAttribute("listBalance", listBalance);
         RequestDispatcher req = request.getRequestDispatcher("/main.jsp" + prefix);

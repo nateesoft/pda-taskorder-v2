@@ -23,7 +23,7 @@ public class Search extends HttpServlet {
         if ("".equals(searchText)) {
             String searchTextCode = (String) request.getParameter("wc");
             ControlMenu cm = new ControlMenu();
-            ArrayList<MenuSetup> listBeanCode = cm.getDataMenuSearchByCode(searchTextCode);
+            List<MenuSetup> listBeanCode = cm.getDataMenuSearchByCode(searchTextCode);
             Gson gson = new Gson();
             JsonElement element1 = gson.toJsonTree(listBeanCode, new TypeToken<List<MenuSetup>>() {
             }.getType());
@@ -34,7 +34,7 @@ public class Search extends HttpServlet {
             
             
             ControlMenu cm = new ControlMenu();
-            ArrayList<MenuSetup> listBean = cm.getDataMenuSearch(searchText);
+            List<MenuSetup> listBean = cm.getDataMenuSearch(searchText);
             Gson gson = new Gson();
             JsonElement element = gson.toJsonTree(listBean, new TypeToken<List<MenuSetup>>() {
             }.getType());

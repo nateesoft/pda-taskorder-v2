@@ -2,6 +2,7 @@ package com.ics.pdatakeorder.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TableFileBean {
 
@@ -59,10 +60,10 @@ public class TableFileBean {
     private String TFinishTime;
     private String TTableIsOn = "N";
     private String TAutoClose = "Y";
-    private ArrayList<BalanceBean> dataBalance;
+    private final List<BalanceBean> dataBalance;
     
     public TableFileBean(){
-        dataBalance = new ArrayList<BalanceBean>();
+        dataBalance = new ArrayList<>();
     }
     
     public void addBalance(BalanceBean bb){
@@ -73,7 +74,7 @@ public class TableFileBean {
         return dataBalance.get(i);
     }
     
-    public ArrayList<BalanceBean> getAllBalance(){
+    public List<BalanceBean> getAllBalance(){
         return dataBalance;
     }
     

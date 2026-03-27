@@ -16,22 +16,24 @@ import java.util.Date;
 import com.ics.pdatakeorder.util.DateConvert;
 import com.ics.pdatakeorder.util.MSG;
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
  * @author Administrator
  */
 public class PKicTran {
+    
+    private static final MySQLConnect mysql = new MySQLConnect();
 
-    public static void setPKicTran(ArrayList<BalanceBean> bill, int kicItemNo) {
-
+    public static void setPKicTran(List<BalanceBean> bill, int kicItemNo) {
         DateConvert dc = new DateConvert();
         String today = dc.GetCurrentDate();
         String time = dc.GetCurrentTime();
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
-            if (bill.size() > 0) {
+            if (!bill.isEmpty()) {
                 for (int i = 0; i < bill.size(); i++) {
 
                     String sqlINSKictran = "INSERT INTO kictran ("
@@ -48,20 +50,20 @@ public class PKicTran {
                             + " '00:00:00', '00:00:00', '', ''); ";
                     mysql.getConnection().createStatement().executeUpdate(sqlINSKictran);
                 }
-
             }
-
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
             mysql.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
         }
     }
 
-    public ArrayList<PKicTranBean> getKicTran(String tableNo) {
+    public List<PKicTranBean> getKicTran(String tableNo) {
+        ProductControl ProductControl = new ProductControl();
         DateConvert dc = new DateConvert();
-        ArrayList<PKicTranBean> list = new ArrayList();
+        List<PKicTranBean> list = new ArrayList();
+        
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             String sql = "select pitemno,pcode,pindex,ptable,ptimein,"
                     + "pqty,pflage,petd,r_showdisplayalert "
@@ -70,51 +72,49 @@ public class PKicTran {
                     + "and pflage='N' "
                     + "and r_printCheckOut='N' "
                     + "order by pitemno,petd;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-
-            ProductControl ProductControl = new ProductControl();
-            while (rs.next()) {
-                PKicTranBean kicTranBean = new PKicTranBean();
-                ProductBean bean = new ProductBean();
-                bean = ProductControl.getData(rs.getString("pcode"));
-                kicTranBean.setpItemNo(rs.getString("pitemno"));
-                kicTranBean.setpCode(rs.getString("pcode"));
-                kicTranBean.setpDesc(bean.getPDesc());
-                kicTranBean.setpIndex(rs.getString("pindex"));
-                kicTranBean.setpTable(rs.getString("ptable"));
-                kicTranBean.setpTimeIn(rs.getString("ptimeIn"));
-                kicTranBean.setpQty(rs.getInt("pqty"));
-                kicTranBean.setpFlage(rs.getString("pflage"));
-                String etd = rs.getString("petd");
-                kicTranBean.setShowDisplayAlert(rs.getString("R_ShowDisplayAlert"));
-                if (etd.equals("E")) {
-                    etd = "นั่งทาน";
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                while (rs.next()) {
+                    PKicTranBean kicTranBean = new PKicTranBean();
+                    ProductBean bean = ProductControl.getData(rs.getString("pcode"));
+                    kicTranBean.setpItemNo(rs.getString("pitemno"));
+                    kicTranBean.setpCode(rs.getString("pcode"));
+                    kicTranBean.setpDesc(bean.getPDesc());
+                    kicTranBean.setpIndex(rs.getString("pindex"));
+                    kicTranBean.setpTable(rs.getString("ptable"));
+                    kicTranBean.setpTimeIn(rs.getString("ptimeIn"));
+                    kicTranBean.setpQty(rs.getInt("pqty"));
+                    kicTranBean.setpFlage(rs.getString("pflage"));
+                    String etd = rs.getString("petd");
+                    kicTranBean.setShowDisplayAlert(rs.getString("R_ShowDisplayAlert"));
+                    if (etd.equals("E")) {
+                        etd = "นั่งทาน";
+                    }
+                    if (etd.equals("T")) {
+                        etd = "ห่อกลับ";
+                    }
+                    if (etd.equals("D")) {
+                        etd = "Delivery";
+                    }
+                    if (etd.equals("P")) {
+                        etd = "Pinto";
+                    }
+                    
+                    if (etd.equals("W")) {
+                        etd = "WholeSale";
+                    }
+                    kicTranBean.setpEtd(etd);
+                    String timeWait;
+                    timeWait = getDefferentTime(kicTranBean.getpTimeIn(), dc.GetCurrentTime());
+                    kicTranBean.setpWaitTime(timeWait);
+                    list.add(kicTranBean);
                 }
-                if (etd.equals("T")) {
-                    etd = "ห่อกลับ";
-                }
-                if (etd.equals("D")) {
-                    etd = "Delivery";
-                }
-                if (etd.equals("P")) {
-                    etd = "Pinto";
-                }
-
-                if (etd.equals("W")) {
-                    etd = "WholeSale";
-                }
-                kicTranBean.setpEtd(etd);
-                String timeWait;
-                timeWait = getDefferentTime(kicTranBean.getpTimeIn(), dc.GetCurrentTime());
-                kicTranBean.setpWaitTime(timeWait);
-                list.add(kicTranBean);
             }
-
-            rs.close();
+        } catch (SQLException | ParseException e) {
+            System.err.println(e.getMessage());
+        } finally {
             mysql.close();
-        } catch (Exception e) {
-            System.out.println(e.toString());
         }
+        
         return list;
     }
 
@@ -123,20 +123,20 @@ public class PKicTran {
         Date date1 = format.parse(time1);
         Date date2 = format.parse(time2);
         long difference = date2.getTime() - date1.getTime();
-        long diffSeconds = difference / 1000 % 60;
         long diffMinutes = difference / (60 * 1000) % 60;
         long diffHours = difference / (60 * 60 * 1000) % 24;
-        long diffDays = difference / (24 * 60 * 60 * 1000);
-        String time = "";
-        time = diffHours + "." + diffMinutes;
+        String time = diffHours + "." + diffMinutes;
+        
         return time;
     }
 
     public static void setPKicTranAgain(String TableNo) {
         DateConvert dc = new DateConvert();
         try {
-            String sql = "update kictran set R_AlertKitChen='N',R_FoodUrgent='Y' where ptable='" + ThaiUtil.Unicode2ASCII(TableNo) + "' and PFlage='N';";
-            MySQLConnect mysql = new MySQLConnect();
+            String sql = "update kictran "
+                    + "set R_AlertKitChen='N',R_FoodUrgent='Y' "
+                    + "where ptable='" + ThaiUtil.Unicode2ASCII(TableNo) + "' "
+                    + "and PFlage='N';";
             mysql.open();
             mysql.getConnection().createStatement().executeUpdate(sql);
             try {
@@ -147,14 +147,15 @@ public class PKicTran {
                 mysql.open();
                 mysql.getConnection().createStatement().executeUpdate(sqlInsLog);
                 mysql.close();
-            } catch (Exception e) {
-                MSG.NOTICE(e.toString());
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
+            
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
             mysql.close();
-        } catch (Exception e) {
-            System.out.println(e.toString());
         }
-
     }
 
     public static void setPKicTranAgainByItem(String TableNo, String pcode, String pname, String pindex) {
@@ -163,42 +164,31 @@ public class PKicTran {
             String sql = "update kictran set R_AlertKitChen='N',R_FoodUrgent='Y',R_UrgentFoodItemName='" + ThaiUtil.Unicode2ASCII(pname) + "' "
                     + "where ptable='" + ThaiUtil.Unicode2ASCII(TableNo) + "' "
                     + "and PFlage='N' and pcode='" + pcode + "', and pindex='" + pname + "' ;";
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             mysql.getConnection().createStatement().executeUpdate(sql);
-            try {
-                String sqlInsTemp = "insert into kictran_logUrgent (select * from kictran where ptable='" + TableNo + "');";
-                mysql.open();
-                mysql.getConnection().createStatement().executeUpdate(sqlInsTemp);
-                String sqlInsLog = "insert into kictran_urgentclick (pTable,pDate,pTime) values('" + TableNo + "','" + dc.GetCurrentDate() + "','" + dc.GetCurrentTime() + "');";
-                mysql.open();
-                mysql.getConnection().createStatement().executeUpdate(sqlInsLog);
-                mysql.close();
-            } catch (Exception e) {
-                MSG.NOTICE(e.toString());
-            }
-            mysql.close();
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
 
+            String sqlInsTemp = "insert into kictran_logUrgent (select * from kictran where ptable='" + TableNo + "');";
+            mysql.getConnection().createStatement().executeUpdate(sqlInsTemp);
+
+            String sqlInsLog = "insert into kictran_urgentclick (pTable,pDate,pTime) values('" + TableNo + "','" + dc.GetCurrentDate() + "','" + dc.GetCurrentTime() + "');";
+            mysql.getConnection().createStatement().executeUpdate(sqlInsLog);
+
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            mysql.close();
+        }
     }
 
     public static void clearKicTran(String TableNo) {
         String sql = "delete from kictran where ptable='" + TableNo + "';";
         try {
-            MySQLConnect mysql = new MySQLConnect();
             mysql.open();
             mysql.getConnection().createStatement().executeUpdate(sql);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
             mysql.close();
-        } catch (Exception e) {
-            MSG.NOTICE(e.toString());
-            System.out.println(e.toString());
-
         }
     }
-//    public static void main(String[] args) throws ParseException {
-//
-//        getDefferentTime("10:00:01", "10:32:03");
-//    }
 }

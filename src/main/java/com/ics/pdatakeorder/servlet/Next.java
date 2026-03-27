@@ -12,9 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.util.List;
 
 @WebServlet(name = "Next", urlPatterns = {"/Next"})
 public class Next extends HttpServlet {
@@ -27,7 +27,7 @@ public class Next extends HttpServlet {
         CharactorCheck charEngCheck = new CharactorCheck();
         String tableNo = (String) session.getAttribute("tableNo");
 
-        ArrayList<BalanceBean> bill;
+        List<BalanceBean> bill;
         BalanceControl blControl = new BalanceControl();
         bill = blControl.getAllBalanceNew(tableNo);
         PKicTran.setPKicTran(bill, 0);

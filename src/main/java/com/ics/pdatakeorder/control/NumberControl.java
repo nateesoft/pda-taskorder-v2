@@ -3,10 +3,9 @@ package com.ics.pdatakeorder.control;
 import java.text.DecimalFormat;
 
 public class NumberControl {
-    
+
     public static String format(double data) {
         DecimalFormat df1 = new DecimalFormat("#,##0.00");
-
         return df1.format(data);
     }
 
@@ -14,26 +13,26 @@ public class NumberControl {
         return (int) data;
     }
 
-    public static double UP_DOWN_25(double d){
-        String money = ""+d;
-        if(money.indexOf(".")!=-1){
+    public static double UP_DOWN_25(double d) {
+        String money = "" + d;
+        if (money.contains(".")) {
             String m = money.replace('.', ',');
             int multi = 1;
-            if(m.indexOf("-")!=-1){
+            if (m.contains("-")) {
                 multi = -1;
             }
             String[] data = m.split(",");
             if (data.length > 1) {
-                if(data[1].length()>2){
-                    data[1] = data[1].substring(0,2);
+                if (data[1].length() > 2) {
+                    data[1] = data[1].substring(0, 2);
                 }
                 double num1 = Double.parseDouble(data[1]);
                 if (num1 < 10) {
                     num1 *= 10;
                 }
                 double num2 = Double.parseDouble(data[0]);
-                if(num1>100){
-                    num1 = num1/10;
+                if (num1 > 100) {
+                    num1 = num1 / 10;
                 }
                 if (num1 >= 88 && num1 < 100) {
                     return num2 + 1.00 * multi;
@@ -51,30 +50,27 @@ public class NumberControl {
             } else {
                 return 0;
             }
-        }else{
+        } else {
             double total = 0;
             try {
                 total = Double.parseDouble(money);
             } catch (NumberFormatException e) {
                 System.err.println(e.getMessage());
             }
-            
+
             return total;
         }
     }
-    
-    public static int UP_DOWN_NATURAL_BAHT(double d){
-        
-        return (int)Math.round(d);
+
+    public static int UP_DOWN_NATURAL_BAHT(double d) {
+        return (int) Math.round(d);
     }
-    
-    public static double DOWN_BAHT(double d){
-        
+
+    public static double DOWN_BAHT(double d) {
         return Math.floor(d);
     }
-    
-    public static double UP_BAHT(double d){
-        
+
+    public static double UP_BAHT(double d) {
         return Math.ceil(d);
     }
 }

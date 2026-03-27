@@ -5,22 +5,20 @@ import com.ics.pdatakeorder.model.TableFileBean;
 import com.ics.pdatakeorder.db.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.sql.SQLException;
 
 public class TableFileControl {
-
+    private static final MySQLConnect mysql = new MySQLConnect();
     public static final int TABLE_READY = 1;
     public static final int TABLE_NOT_ACTIVE = 2;
     public static final int TABLE_NOT_SETUP = 0;
     public static final int TABLE_EXIST_DATA = 3;
     public static final int TABLE_EXIST_DATA_IS_ACTIVE = 4;
     public static String USER_USE = "";
-//    public MySQLConnect c = new MySQLConnect();
 
     public static boolean checkBillReady(String R_Table) {
         boolean isCheckBill = false;
-        MySQLConnect mysql = new MySQLConnect();
         try {
 
             mysql.open();
@@ -34,7 +32,7 @@ public class TableFileControl {
 
             rs.close();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             isCheckBill = false;
         } finally {
@@ -46,60 +44,57 @@ public class TableFileControl {
 
     public int checkTableRead(String tableNo, String empCode, String MACNO) {
         int result;
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sql = "select * "
                     + "from tablefile "
                     + "where TCode='" + ThaiUtil.Unicode2ASCII(tableNo) + "'";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            String TActive;
-            String TOnAct, TUser;
-
-            if (rs.next()) {
-                TActive = "Y";//rs.getString("TActive");
-                if (TActive.equalsIgnoreCase("Y")) {
-                    TOnAct = rs.getString("TOnAct");
-                    TUser = rs.getString("TUSer");
-
-                    if (TOnAct.equalsIgnoreCase("Y")) {
-                        result = TABLE_EXIST_DATA_IS_ACTIVE;
-                        try {
-                            String sql2 = "select Name from employ where code='" + TUser + "';";
-                            ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sql2);
-                            if (rs2.next()) {
-                                USER_USE = ThaiUtil.ASCII2Unicode(rs2.getString("Name"));
-                            }
-
-                            if (TUser.equals("")) {
-                                try {
-                                    String sql3 = "select Name from posuser where username='" + rs.getString("Cashier") + "';";
-                                    ResultSet rs3 = mysql.getConnection().createStatement().executeQuery(sql3);
-                                    if (rs3.next()) {
-                                        USER_USE = ThaiUtil.ASCII2Unicode(rs3.getString("Name"));
+            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
+                String TActive;
+                String TOnAct, TUser;
+                if (rs.next()) {
+                    TActive = "Y";//rs.getString("TActive");
+                    if (TActive.equalsIgnoreCase("Y")) {
+                        TOnAct = rs.getString("TOnAct");
+                        TUser = rs.getString("TUSer");
+                        
+                        if (TOnAct.equalsIgnoreCase("Y")) {
+                            result = TABLE_EXIST_DATA_IS_ACTIVE;
+                            try {
+                                String sql2 = "select Name from employ where code='" + TUser + "';";
+                                try (ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sql2)) {
+                                    if (rs2.next()) {
+                                        USER_USE = ThaiUtil.ASCII2Unicode(rs2.getString("Name"));
                                     }
-
-                                    rs3.close();
-                                } catch (Exception e) {
-                                    System.err.println(e.getMessage());
+                                    
+                                    if (TUser.equals("")) {
+                                        try {
+                                            String sql3 = "select Name from posuser where username='" + rs.getString("Cashier") + "';";
+                                            try (ResultSet rs3 = mysql.getConnection().createStatement().executeQuery(sql3)) {
+                                                if (rs3.next()) {
+                                                    USER_USE = ThaiUtil.ASCII2Unicode(rs3.getString("Name"));
+                                                }
+                                            }
+                                        } catch (SQLException e) {
+                                            System.err.println(e.getMessage());
+                                        }
+                                    }
                                 }
+                            } catch (SQLException e) {
+                                System.err.println(e.getMessage());
                             }
-                            rs2.close();
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
+                        } else {
+                            result = TABLE_EXIST_DATA;
                         }
                     } else {
-                        result = TABLE_EXIST_DATA;
+                        result = TABLE_NOT_ACTIVE;
                     }
                 } else {
-                    result = TABLE_NOT_ACTIVE;
+                    result = TABLE_NOT_SETUP;
                 }
-            } else {
-                result = TABLE_NOT_SETUP;
             }
-            rs.close();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             result = TABLE_NOT_SETUP;
         } finally {
             mysql.close();
@@ -110,7 +105,6 @@ public class TableFileControl {
 
     public TableFileBean getData(String table) {
         TableFileBean bean = new TableFileBean();
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sql = "select * "
@@ -177,32 +171,10 @@ public class TableFileControl {
         return bean;
     }
 
-    public TableFileBean getDataFloorPlan() {
-        TableFileBean bean = new TableFileBean();
-        ArrayList<TableFileBean> listBean;
-        MySQLConnect mysql = new MySQLConnect();
-        try {
-            mysql.open();
-            String sql = "select * from  tablesetup order by tcode;";
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql);
-            while (rs.next()) {
-//                String sqlGetTableData = "select "
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            mysql.close();
-        }
-
-        return bean;
-    }
-
     public void updateTableActive(String table, String customer, String emp, String MACNO) {
         if (customer.equals("")) {
             customer = "0";
         }
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sql = "update tablefile set "
@@ -226,11 +198,9 @@ public class TableFileControl {
 
     public void updateTableHold(String table) {
         String date_default = "1899-12-30";
-        MySQLConnect mysql = new MySQLConnect();
         try {
             mysql.open();
             String sqlGetEmp = "SELECT r_emp FROM balance where r_table='" + table + "' ORDER BY r_index DESC LIMIT 1;";
-//            String sqlGetEmp = "SELECT r_emp FROM balance ORDER BY r_index DESC LIMIT 1;";
             ResultSet rsGetEmp = mysql.getConnection().createStatement().executeQuery(sqlGetEmp);
             String TUser = "";
             if (rsGetEmp.next()) {
@@ -263,7 +233,6 @@ public class TableFileControl {
 
     public String getTableStatusActive(String table) {
         String status = "";
-        MySQLConnect mysql = new MySQLConnect();
         try {
             String sql = "select TActive from tablefile where tcode='" + table + "'";
             Statement stmt = mysql.getConnection().createStatement();

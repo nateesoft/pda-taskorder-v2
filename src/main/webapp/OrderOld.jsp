@@ -1,7 +1,7 @@
+<%@page import="java.util.List"%>
 <%@page import="com.ics.pdatakeorder.util.ThaiUtil"%>
 <%@page import="com.ics.pdatakeorder.model.PKicTran"%>
 <%@page import="com.ics.pdatakeorder.model.PKicTranBean"%>
-<%@page import="com.ics.pdatakeorder.db.MySQLConnect"%>
 <%@page import="com.ics.pdatakeorder.model.ControlPrintCheckBill"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="com.ics.pdatakeorder.control.BalanceControl"%>
@@ -92,7 +92,7 @@
                 if (table == null) {
                     table = "";
                 }
-                ArrayList<BalanceBean> listBalance = bc.getAllBalanceHold(table);
+                List<BalanceBean> listBalance = bc.getAllBalanceHold(table);
                 if (listBalance == null) {
                     listBalance = new ArrayList();
                 }
@@ -184,7 +184,7 @@
             <%
                 if (size > 0) {
                     PKicTran kicTran = new PKicTran();
-                    ArrayList<PKicTranBean> list = kicTran.getKicTran(table);
+                    List<PKicTranBean> list = kicTran.getKicTran(table);
                     if (list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
             %>

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MemberControl {
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public void updateMemberDiscount(String table, MemberBean memberBean) {
         String strDisc = "";
@@ -15,7 +16,7 @@ public class MemberControl {
                 strDisc = memberBean.getMember_DiscountRate();
             }
         }
-        MySQLConnect mysql = new MySQLConnect();
+        
         try {
             mysql.open();
             String sql = "select sum(R_PrSubAmt) as MemDiscount "
@@ -39,7 +40,6 @@ public class MemberControl {
     }
 
     public void updateMemberAllBalance(String table, MemberBean memberBean) {
-        MySQLConnect mysql = new MySQLConnect();
         try {
             /*
             R_PrSubType = -M
@@ -69,12 +69,18 @@ public class MemberControl {
                         if (R_Normal == null) {
                             R_Normal = "";
                         }
-                        if (R_Normal.equals("N")) {
-                            Percent = Integer.parseInt(subPercent[0].trim());
-                        } else if (R_Normal.equals("C")) {
-                            Percent = Integer.parseInt(subPercent[1].trim());
-                        } else if (R_Normal.equals("S")) {
-                            Percent = Integer.parseInt(subPercent[2].trim());
+                        switch (R_Normal) {
+                            case "N":
+                                Percent = Integer.parseInt(subPercent[0].trim());
+                                break;
+                            case "C":
+                                Percent = Integer.parseInt(subPercent[1].trim());
+                                break;
+                            case "S":
+                                Percent = Integer.parseInt(subPercent[2].trim());
+                                break;
+                            default:
+                                break;
                         }
                     }
                     

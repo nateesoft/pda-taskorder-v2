@@ -93,8 +93,6 @@
     <body onload="ready();" style="background-color: #FF9;">
         <div style=" alignment-adjust:  central;">
             <%
-                MySQLConnect conn = new MySQLConnect();
-                conn.open();
                 String macNo = (String) session.getAttribute("macno");
                 if (macNo == null || macNo.equals("")) {
                     out.println("Please Setting Macno <br />(ฐานข้อมูล: " + MySQLConnect.DB + ")");
@@ -186,8 +184,7 @@
                 </table>
 
             </form>
-            <%conn.close();
-                }%>
+            <% } %>
         </div>
     </body>
 </html>

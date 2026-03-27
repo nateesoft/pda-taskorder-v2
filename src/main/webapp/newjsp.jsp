@@ -1,10 +1,3 @@
-<%-- 
-    Document   : newjsp
-    Created on : May 23, 2025, 6:32:49 PM
-    Author     : Administrator
---%>
-
-<%@page import="com.ics.pdatakeorder.db.MySQLConnect"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -68,11 +61,8 @@
         <input type="text" id="myText" value="">
         <input type="button" name="button" id="button" value="กลับ" onclick="check()" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
         <%
-            MySQLConnect mysql = new MySQLConnect();
-
             try {
                 String tableNo = (String) session.getAttribute("tableNo");
-                mysql.open();
                 System.out.println(tableNo);
             } catch (Exception e) {
             }

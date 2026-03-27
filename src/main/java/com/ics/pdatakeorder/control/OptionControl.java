@@ -2,8 +2,11 @@ package com.ics.pdatakeorder.control;
 
 import com.ics.pdatakeorder.db.MySQLConnect;
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.sql.SQLException;
 
 public class OptionControl {
+
+    private final MySQLConnect mysql = new MySQLConnect();
 
     public boolean updateOption(String index, String opt, String type) {
         String[] dataOpt = new String[]{"", "", "", "", "", "", "", "", ""};
@@ -12,7 +15,6 @@ public class OptionControl {
         System.arraycopy(inpOpt, 0, dataOpt, 0, inpOpt.length);
 
         String sql;
-        MySQLConnect mysql =new MySQLConnect();
         try {
             mysql.open();
             sql = "update balance set "
@@ -32,11 +34,11 @@ public class OptionControl {
             sql += " where R_Index='" + ThaiUtil.Unicode2ASCII(index) + "' ";
 
             mysql.getConnection().createStatement().executeUpdate(sql);
-            
+
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
 

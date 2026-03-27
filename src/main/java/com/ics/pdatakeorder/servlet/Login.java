@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "Login", urlPatterns = {"/Login"})
 public class Login extends HttpServlet {
@@ -91,7 +91,7 @@ public class Login extends HttpServlet {
                     switch (check) {
                         case TableFileControl.TABLE_READY, TableFileControl.TABLE_EXIST_DATA -> {
                             BalanceControl bControl = new BalanceControl();
-                            ArrayList<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
+                            List<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
                             request.setAttribute("listBalance", listBalance);
                             session.setAttribute("tableNo", tableNo);
                             session.setAttribute("empCode", empCode);
@@ -139,7 +139,7 @@ public class Login extends HttpServlet {
             switch (check) {
                 case TableFileControl.TABLE_READY, TableFileControl.TABLE_EXIST_DATA -> {
                     BalanceControl bControl = new BalanceControl();
-                    ArrayList<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
+                    List<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
                     request.setAttribute("listBalance", listBalance);
                     session.setAttribute("tableNo", tableNo);
                     session.setAttribute("empCode", empCode);

@@ -14,11 +14,11 @@ import com.ics.pdatakeorder.db.MySQLConnect;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class PromotionControl {
-//    public MySQLConnect c = new MySQLConnect();
-
+    
+    private final MySQLConnect mysql = new MySQLConnect();
     private final PosControl posControl;
 
     public PromotionControl() {
@@ -36,9 +36,9 @@ public class PromotionControl {
         ProductBean product;
 
         BalanceControl balanceControl = new BalanceControl();
-        ArrayList<BalanceBean> dataBean = balanceControl.getAllBalancePromotion(table);//Filter by Promotion and Discount = 'Y'
+        List<BalanceBean> dataBean = balanceControl.getAllBalancePromotion(table);//Filter by Promotion and Discount = 'Y'
         String PCode;
-        MySQLConnect mysql = new MySQLConnect();
+        
         double R_Quan = 0.00;
 
         for (int i = 0; i < dataBean.size(); i++) {
@@ -63,8 +63,9 @@ public class PromotionControl {
                         + "and (PTime1S<=curtime() and PTime1E>=curtime()) "
                         + "and PStrDay like '%" + E_Format_Date + "%' "
                         + "and PTS1 like '%" + balance.getR_ETD() + "%' ";
-                System.out.println(sql);
+                
                 mysql.open();
+                
                 ProtabBean protab1 = getDataSql(sql);
                 if (protab1 != null) {
                     try {
@@ -76,7 +77,6 @@ public class PromotionControl {
                                 + "and R_PluCode='" + balance.getR_PluCode() + "' "
                                 + "and R_Void <> 'V' ";
                         int iUpdate = mysql.getConnection().createStatement().executeUpdate(sqlUpdatePro);
-                        //System.out.println(iUpdate + ":Update -P");
 
                         //Sale Promotion Type 1
                         if (protab1.getPType().equals(Promotion.PROMOTION_TYPE_1)) {
@@ -111,7 +111,6 @@ public class PromotionControl {
                                     + "and R_PrType='-P' "
                                     + "and R_Void <> 'V' ";
                             iUpdate = mysql.getConnection().createStatement().executeUpdate(sqlUpdatePro);
-                            //System.out.println(iUpdate + "Update promotion:");
 
                             ProDiscAmt += R_PrAmt;
 
