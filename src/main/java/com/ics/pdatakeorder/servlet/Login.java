@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "Login", urlPatterns = {"/Login"})
@@ -23,7 +22,6 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
 
         String macNo = (String) session.getAttribute("macno");
@@ -74,22 +72,26 @@ public class Login extends HttpServlet {
 
         if (emControl.checkEmployUse()) {
             if (empCode.equals("")) {
-                out.println("<h1>ท่านต้องระบุรหัสบริกร ก่อนเปิดโต๊ะสั่งอาหาร!!!</h1>");
-                out.println("<h3>เหตุผล</h3>");
-                out.println("<h5>- เนื่องจากมีการกำหนดจากระบบให้มีการใช้งานรหัสบริกร</h5>");
-                out.println("<a href=\"Welcome?macno=" + macNo + "\"><input type='button' style='height: 100px; width: 250px;' value='Back' /></a>");
-            } else {
+                session.setAttribute("topic", "ท่านต้องระบุรหัสบริกร ก่อนเปิดโต๊ะสั่งอาหาร!!!");
+                session.setAttribute("reason", "เนื่องจากมีการกำหนดจากระบบให้มีการใช้งานรหัสบริกร");
+                session.setAttribute("macno", macNo);
 
+                RequestDispatcher req = request.getRequestDispatcher("/LoginWarning.jsp");
+                req.forward(request, response);
+            } else {
                 // check employ
                 if (!emControl.isEmployExists(empCode)) {
-                    out.println("<h1>ท่านระบุรหัสบริกรไม่ถูกต้อง กรุณาตรวจสอบ!!!</h1>");
-                    out.println("<h3>เหตุผล</h3>");
-                    out.println("<h5>- เนื่องจากมีการกำหนดจากระบบให้มีการใช้งานรหัสบริกร</h5>");
-                    out.println("<a href=\"Welcome?macno=" + macNo + "\"><input type='button' style='height: 100px; width: 250px;' value='Back' /></a>");
+                    session.setAttribute("topic", "ท่านระบุรหัสบริกรไม่ถูกต้อง กรุณาตรวจสอบ!!!");
+                    session.setAttribute("reason", "เนื่องจากมีการกำหนดจากระบบให้มีการใช้งานรหัสบริกร");
+                    session.setAttribute("macno", macNo);
+
+                    RequestDispatcher req = request.getRequestDispatcher("/LoginWarning.jsp");
+                    req.forward(request, response);
                 } else {
                     int check = tfControl.checkTableRead(tableNo, empCode, macNo);
                     switch (check) {
-                        case TableFileControl.TABLE_READY, TableFileControl.TABLE_EXIST_DATA -> {
+                        case TableFileControl.TABLE_READY:
+                        case TableFileControl.TABLE_EXIST_DATA: {
                             BalanceControl bControl = new BalanceControl();
                             List<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
                             request.setAttribute("listBalance", listBalance);
@@ -99,7 +101,6 @@ public class Login extends HttpServlet {
                             session.setAttribute("saleType", saleType);
                             String chkRem = (String) request.getParameter("chkRemember");
                             if (chkRem != null) {
-                                //set cookie
                                 Cookie c = new Cookie("c_empcode", empCode);
                                 c.setMaxAge(60 * 60 * 8);
                                 response.addCookie(c);
@@ -109,20 +110,28 @@ public class Login extends HttpServlet {
                                 response.addCookie(UIDCookie);
                             }
                             tfControl.updateTableActive(tableNo, custCount, empCode, macNo);
+                            MainPageHelper.prepare(request, session);
                             RequestDispatcher req = request.getRequestDispatcher("/main.jsp" + prefix);
                             req.forward(request, response);
+                            break;
                         }
-                        case TableFileControl.TABLE_EXIST_DATA_IS_ACTIVE -> {
-                            out.println("<h1>Employee : " + TableFileControl.USER_USE + " Ussing !!!</h1>");
-                            out.println("<h3>Reason</h3>");
-                            out.println("<h5>- Cannot Use 2 Employee</h5>");
-                            out.println("<a href=\"Welcome?macno=" + macNo + "\"><input type='button' style='height: 100px; width: 250px;' value='Back' /></a>");
+                        case TableFileControl.TABLE_EXIST_DATA_IS_ACTIVE: {
+                            session.setAttribute("topic", "Employee : " + TableFileControl.USER_USE + " Using !!!");
+                            session.setAttribute("reason", "Cannot Use 2 Employee Login on macNo: " + macNo);
+                            session.setAttribute("macno", macNo);
+
+                            RequestDispatcher req = request.getRequestDispatcher("/LoginWarning.jsp");
+                            req.forward(request, response);
+                            break;
                         }
-                        default -> {
-                            out.println("<h1>Please Check Config!!!</h1>");
-                            out.println("<h3>Reason</h3>");
-                            out.println("<h5>- Table Out of Control</h5>");
-                            out.println("<a href=\"Welcome?macno=" + macNo + "\"><input type='button' style='height: 100px; width: 250px;' value='Back' /></a>");
+                        default: {
+                            session.setAttribute("topic", "Please Check Config!!!");
+                            session.setAttribute("reason", "Table Out of Control");
+                            session.setAttribute("macno", macNo);
+
+                            RequestDispatcher req = request.getRequestDispatcher("/LoginWarning.jsp");
+                            req.forward(request, response);
+                            break;
                         }
                     }
                 }
@@ -137,7 +146,7 @@ public class Login extends HttpServlet {
             }
 
             switch (check) {
-                case TableFileControl.TABLE_READY, TableFileControl.TABLE_EXIST_DATA -> {
+                case TableFileControl.TABLE_READY, TableFileControl.TABLE_EXIST_DATA: {
                     BalanceControl bControl = new BalanceControl();
                     List<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
                     request.setAttribute("listBalance", listBalance);
@@ -147,7 +156,6 @@ public class Login extends HttpServlet {
                     session.setAttribute("saleType", saleType);
                     String chkRem = (String) request.getParameter("chkRemember");
                     if (chkRem != null) {
-                        //set cookie
                         Cookie c = new Cookie("c_empcode", empCode);
                         c.setMaxAge(60 * 60 * 8);
                         response.addCookie(c);
@@ -157,20 +165,28 @@ public class Login extends HttpServlet {
                         response.addCookie(UIDCookie);
                     }
                     tfControl.updateTableActive(tableNo, custCount, empCode, macNo);
+                    MainPageHelper.prepare(request, session);
                     RequestDispatcher req = request.getRequestDispatcher("/main.jsp" + prefix);
                     req.forward(request, response);
+                    break;
                 }
-                case TableFileControl.TABLE_EXIST_DATA_IS_ACTIVE -> {
-                    out.println("<h1>พนักงาน คุณ_" + TableFileControl.USER_USE + " กำลังใช้งานโต๊ะนี้อยู่ !!!</h1>");
-                    out.println("<h3>เหตุผล</h3>");
-                    out.println("<h5>- ไม่สามารถเปิดโต๊ะใช้งานซ้ำกันได้</h5>");
-                    out.println("<a href=\"Welcome?macno=" + macNo + "\"><input type='button' style='height: 100px; width: 250px;' value='Back' /></a>");
+                case TableFileControl.TABLE_EXIST_DATA_IS_ACTIVE: {
+                    session.setAttribute("topic", "<h1>พนักงาน คุณ_" + TableFileControl.USER_USE + " กำลังใช้งานโต๊ะนี้อยู่ !!!</h1>");
+                    session.setAttribute("reason", "<h5>- ไม่สามารถเปิดโต๊ะใช้งานซ้ำกันได้</h5>");
+                    session.setAttribute("macno", macNo);
+
+                    RequestDispatcher req = request.getRequestDispatcher("/LoginWarning.jsp");
+                    req.forward(request, response);
+                    break;
                 }
-                default -> {
-                    out.println("<h1>โต๊ะที่ท่านเรียกใช้งาน ยังไม่ถูกตั้งค่าให้ใช้งานได้!!!</h1>");
-                    out.println("<h3>เหตุผล</h3>");
-                    out.println("<h5>- อาจเป็นโต๊ะที่ปิดปรับปรุง หรือไม่กำหนดให้ปิดชั่วคราว</h5>");
-                    out.println("<a href=\"Welcome?macno=" + macNo + "\"><input type='button' style='height: 100px; width: 250px;' value='Back' /></a>");
+                default: {
+                    session.setAttribute("topic", "<h1>โต๊ะที่ท่านเรียกใช้งาน ยังไม่ถูกตั้งค่าให้ใช้งานได้!!!</h1>");
+                    session.setAttribute("reason", "อาจเป็นโต๊ะที่ปิดปรับปรุง หรือไม่กำหนดให้ปิดชั่วคราว");
+                    session.setAttribute("macno", macNo);
+
+                    RequestDispatcher req = request.getRequestDispatcher("/LoginWarning.jsp");
+                    req.forward(request, response);
+                    break;
                 }
             }
         }

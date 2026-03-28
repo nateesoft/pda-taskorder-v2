@@ -43,59 +43,59 @@ public class TableFileControl {
     }
 
     public int checkTableRead(String tableNo, String empCode, String MACNO) {
-        int result;
+        int result = TABLE_NOT_SETUP;
         try {
             mysql.open();
             String sql = "select * "
                     + "from tablefile "
                     + "where TCode='" + ThaiUtil.Unicode2ASCII(tableNo) + "'";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
-                String TActive;
-                String TOnAct, TUser;
                 if (rs.next()) {
-                    TActive = "Y";//rs.getString("TActive");
-                    if (TActive.equalsIgnoreCase("Y")) {
-                        TOnAct = rs.getString("TOnAct");
-                        TUser = rs.getString("TUSer");
-                        
-                        if (TOnAct.equalsIgnoreCase("Y")) {
-                            result = TABLE_EXIST_DATA_IS_ACTIVE;
-                            try {
-                                String sql2 = "select Name from employ where code='" + TUser + "';";
-                                try (ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sql2)) {
-                                    if (rs2.next()) {
-                                        USER_USE = ThaiUtil.ASCII2Unicode(rs2.getString("Name"));
-                                    }
-                                    
-                                    if (TUser.equals("")) {
-                                        try {
-                                            String sql3 = "select Name from posuser where username='" + rs.getString("Cashier") + "';";
-                                            try (ResultSet rs3 = mysql.getConnection().createStatement().executeQuery(sql3)) {
-                                                if (rs3.next()) {
-                                                    USER_USE = ThaiUtil.ASCII2Unicode(rs3.getString("Name"));
-                                                }
-                                            }
-                                        } catch (SQLException e) {
-                                            System.err.println(e.getMessage());
+                    String TActive = rs.getString("TActive");
+                    if(TActive == null || TActive.equals("") || TActive.equals("N")){
+                        return TABLE_NOT_ACTIVE;
+                    }
+                    
+                    String TOnAct = rs.getString("TOnAct");
+                    String TUser = rs.getString("TUSer");
+
+                    if (!TOnAct.equalsIgnoreCase("Y")) {
+                        return TABLE_EXIST_DATA;
+                    }
+                    
+                    if (TOnAct.equalsIgnoreCase("Y") && empCode.equals(TUser)) {
+                        return TABLE_READY;
+                    }
+
+                    try {
+                        String sql2 = "select Name from employ where code='" + TUser + "';";
+                        try (ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sql2)) {
+                            if (rs2.next()) {
+                                USER_USE = ThaiUtil.ASCII2Unicode(rs2.getString("Name"));
+                            }
+
+                            if (TUser.equals("")) {
+                                try {
+                                    String sql3 = "select Name from posuser where username='" + rs.getString("Cashier") + "';";
+                                    try (ResultSet rs3 = mysql.getConnection().createStatement().executeQuery(sql3)) {
+                                        if (rs3.next()) {
+                                            USER_USE = ThaiUtil.ASCII2Unicode(rs3.getString("Name"));
                                         }
                                     }
+                                } catch (SQLException e) {
+                                    System.err.println(e.getMessage());
                                 }
-                            } catch (SQLException e) {
-                                System.err.println(e.getMessage());
                             }
-                        } else {
-                            result = TABLE_EXIST_DATA;
                         }
-                    } else {
-                        result = TABLE_NOT_ACTIVE;
+                        result = TABLE_EXIST_DATA_IS_ACTIVE;
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
                     }
-                } else {
-                    result = TABLE_NOT_SETUP;
                 }
             }
 
         } catch (SQLException e) {
-            result = TABLE_NOT_SETUP;
+            System.err.println(e.getMessage());
         } finally {
             mysql.close();
         }

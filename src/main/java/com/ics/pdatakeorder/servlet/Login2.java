@@ -30,8 +30,10 @@ public class Login2 extends HttpServlet {
 
         BalanceControl bControl = new BalanceControl();
         List<BalanceBean> listBalance = bControl.getAllBalance(tableNo);
-
         request.setAttribute("listBalance", listBalance);
+
+        MainPageHelper.prepare(request, session);
+
         RequestDispatcher req = request.getRequestDispatcher("/main.jsp" + prefix);
         req.forward(request, response);
     }
