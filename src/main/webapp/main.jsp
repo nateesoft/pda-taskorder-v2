@@ -205,19 +205,19 @@
                                             </a>
                                         </c:when>
                                         <c:when test="${item.menu.code_Type eq 'P' and not empty item.menu.shortName}">
-                                            <a href="#${item.menu.pCode}" rel="modal:open">
-                                                <img src="img/${item.menu.pCode}.png" alt="No IMG!" width="75" height="75">
+                                            <a href="#${item.menu.PCode}" rel="modal:open">
+                                                <img src="img/${item.menu.PCode}.png" alt="No IMG!" width="75" height="75">
                                             </a>
-                                            <div id="${item.menu.pCode}" class="modal">
+                                            <div id="${item.menu.PCode}" class="modal">
                                                 <div align="center">แสดงรายละเอียดสินค้า</div>
-                                                <img id="imgShow" src="img/${item.menu.pCode}.png" width="100%" height="100%" alt="" />
+                                                <img id="imgShow" src="img/${item.menu.PCode}.png" width="100%" height="100%" alt="" />
                                                 <div align="center">
-                                                    <button onclick="saveData('${prefix}','${item.menu.pCode}')">สั่งสินค้า</button>
+                                                    <button onclick="saveData('${prefix}','${item.menu.PCode}')">สั่งสินค้า</button>
                                                 </div>
                                             </div>
-                                            <a href="javascript:saveData('${prefix}','${item.menu.pCode}')" style="text-decoration: none;">
+                                            <a href="javascript:saveData('${prefix}','${item.menu.PCode}')" style="text-decoration: none;">
                                                 <button class="border2" style="width: 75px; height: 75px; font-size: ${fontSize}; color: #000;">${item.menu.shortName}</button>
-                                                <button class="border1" style="width: 75px; height: 38px; font-size: ${fontSize}; color: #06F;">${item.menu.pCode}</button>
+                                                <button class="border1" style="width: 75px; height: 38px; font-size: ${fontSize}; color: #06F;">${item.menu.PCode}</button>
                                             </a>
                                         </c:when>
                                         <c:when test="${not empty item.menu.shortName}">
