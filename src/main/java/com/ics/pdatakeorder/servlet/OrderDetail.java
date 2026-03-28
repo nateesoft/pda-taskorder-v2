@@ -1,12 +1,16 @@
 package com.ics.pdatakeorder.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.ics.pdatakeorder.db.MySQLConnect;
+import com.ics.pdatakeorder.model.BalanceBean;
+import com.ics.pdatakeorder.model.OptionFile;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  *
@@ -27,18 +31,32 @@ public class OrderDetail extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet OrderDetail</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet OrderDetail at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        String prefix = request.getParameter("prefix");
+        if (prefix == null || prefix.isEmpty()) {
+            prefix = "A";
         }
+
+        HttpSession session = request.getSession();
+        String macNo = (String) session.getAttribute("macno");
+        String saleType = (String) session.getAttribute("saleType");
+        if (saleType == null || saleType.isEmpty()) {
+            saleType = "E";
+        }
+
+        request.setAttribute("prefix", prefix);
+        request.setAttribute("macNo", macNo);
+        request.setAttribute("saleType", saleType);
+        request.setAttribute("dbName", MySQLConnect.DB);
+
+        BalanceBean bean = (BalanceBean) request.getAttribute("bean");
+        if (macNo != null && !macNo.isEmpty() && bean != null) {
+            String[] options = OptionFile.getListOption(bean.getR_Group());
+            request.setAttribute("options", options);
+        }
+
+        RequestDispatcher req = request.getRequestDispatcher("/detail.jsp");
+        req.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -29,7 +29,7 @@ public class Order extends HttpServlet {
         BalanceBean bean = bc.getBalanceIndex(ThaiUtil.Unicode2ASCII(charEngCheck.charEngCheck(tableNo)), ThaiUtil.Unicode2ASCII(charEngCheck.charEngCheck(R_Index)));
 
         request.setAttribute("bean", bean);
-        RequestDispatcher req = request.getRequestDispatcher("/detail.jsp");
+        RequestDispatcher req = request.getRequestDispatcher("/OrderDetail");
         req.forward(request, response);
     }
 

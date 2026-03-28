@@ -1,172 +1,348 @@
-<%@page import="com.ics.pdatakeorder.db.MySQLConnect"%>
-<%@page import="com.ics.pdatakeorder.util.ThaiUtil"%>
-<%@page import="java.text.DecimalFormat"%>
-<%@page import="com.ics.pdatakeorder.model.OptionFile"%>
-<%@page import="com.ics.pdatakeorder.model.BalanceBean"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PDA-ICS</title>
+        <script src="jquery.min.js"></script>
         <script type="text/javascript">
             function back() {
                 window.location = "OrderList?prefix=A";
             }
-            function input(v) {
-                document.getElementById("txtQtyOrder").value = v.value;
-            }
             function addQty() {
                 var qtyAdd = document.getElementById("txtQtyPlus");
-                var qtyCount = parseInt(qtyAdd.value);
-                qtyAdd.value = (qtyCount + 1);
+                qtyAdd.value = parseInt(qtyAdd.value) + 1;
             }
             function addNew() {
-                var qtyAdd = document.getElementById("txtQtyPlus");
-                var qtyCount = parseInt(qtyAdd.value);
-                var prefix = document.getElementById("txtPrefix").value;
-                var PCode = document.getElementById("txtPCode").value;
-
+                var qtyCount = parseInt(document.getElementById("txtQtyPlus").value);
+                var prefix   = document.getElementById("txtPrefix").value;
+                var PCode    = document.getElementById("txtPCode").value;
                 $.get("Save?prefix=" + prefix + "&PCode=" + qtyCount + "*" + PCode, function (responseJson) {
                     if (responseJson !== null) {
                         $.each(responseJson, function (key, value) {
-                            //var data = value.split(",");
                             window.location = "OrderList?prefix=" + prefix;
                         });
                     }
                 });
             }
             function chkThis(v) {
-                var vv = document.getElementById("chkOpt" + v);
-                if (vv.checked === true) {
-                    vv.checked = false;
+                var cb  = document.getElementById("chkOpt" + v);
+                var btn = document.getElementById("btnOpt" + v);
+                if (cb.checked) {
+                    cb.checked = false;
+                    btn.classList.remove("active");
                 } else {
-                    vv.checked = true;
+                    cb.checked = true;
+                    btn.classList.add("active");
                 }
             }
             function chk(c) {
-                if (c === "E") {
-                    document.getElementById("chkType1").checked = true;
-                } else if (c === "T") {
-                    document.getElementById("chkType2").checked = true;
-                } else if (c === "D") {
-                    document.getElementById("chkType3").checked = true;
-                } else {
-                    document.getElementById("chkType1").checked = true;
-                }
+                var map = { E: "chkType1", T: "chkType2", D: "chkType3" };
+                var btnMap = { E: "btnType1", T: "btnType2", D: "btnType3" };
+                document.querySelectorAll(".btn-etd").forEach(function(b) { b.classList.remove("active"); });
+                var radioId = map[c] || "chkType1";
+                var btnId   = btnMap[c] || "btnType1";
+                document.getElementById(radioId).checked = true;
+                document.getElementById(btnId).classList.add("active");
             }
         </script>
-        <script src="jquery.min.js"></script>
+        <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                font-family: 'Sarabun', 'Segoe UI', sans-serif;
+                background-color: #f0f4f8;
+                font-size: 15px;
+            }
+
+            .page-wrapper {
+                padding: 12px;
+                max-width: 480px;
+            }
+
+            /* ── Cards ── */
+            .card {
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+
+            .card-label {
+                font-size: 12px;
+                font-weight: 700;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: .5px;
+                margin-bottom: 8px;
+            }
+
+            /* ── Product card ── */
+            .product-code  { font-size: 13px; color: #999; margin-bottom: 4px; }
+            .product-name  { font-size: 20px; font-weight: 700; color: #1a3a6b; margin-bottom: 10px; }
+            .product-meta  { display: flex; gap: 10px; align-items: center; }
+
+            .badge-price {
+                background: #1a3a6b;
+                color: #fff;
+                border-radius: 8px;
+                padding: 5px 12px;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .badge-qty {
+                background: #e8f0fe;
+                color: #1a3a6b;
+                border-radius: 8px;
+                padding: 5px 12px;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            /* ── ETD toggle buttons ── */
+            .etd-group {
+                display: flex;
+                gap: 8px;
+            }
+
+            .etd-group input[type="radio"] { display: none; }
+
+            .btn-etd {
+                flex: 1;
+                padding: 12px 4px;
+                border: 2px solid #d0d8e4;
+                border-radius: 8px;
+                background: #f7faff;
+                color: #555;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all .15s;
+            }
+
+            .btn-etd.active {
+                background: #1a3a6b;
+                border-color: #1a3a6b;
+                color: #fff;
+            }
+
+            /* ── Options ── */
+            .opts-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                max-height: 180px;
+                overflow-y: auto;
+                padding: 4px 0;
+            }
+
+            .opts-grid input[type="checkbox"] { display: none; }
+
+            .btn-opt {
+                padding: 10px 14px;
+                border: 2px solid #2e7d32;
+                border-radius: 8px;
+                background: #fff;
+                color: #2e7d32;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all .15s;
+            }
+
+            .btn-opt.active {
+                background: #2e7d32;
+                color: #fff;
+            }
+
+            .note-input {
+                width: 100%;
+                margin-top: 10px;
+                padding: 10px 12px;
+                border: 1.5px solid #d0d8e4;
+                border-radius: 8px;
+                font-size: 15px;
+                font-family: inherit;
+            }
+
+            .note-hint {
+                font-size: 12px;
+                color: #aaa;
+                margin-bottom: 6px;
+            }
+
+            /* ── Add-qty row ── */
+            .add-qty-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .qty-display {
+                width: 60px;
+                padding: 8px;
+                text-align: center;
+                border: 1.5px solid #d0d8e4;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: 700;
+                color: #1a3a6b;
+            }
+
+            .btn-plus {
+                width: 44px;
+                height: 44px;
+                background: #e8f0fe;
+                border: none;
+                border-radius: 8px;
+                font-size: 22px;
+                font-weight: 700;
+                color: #1a3a6b;
+                cursor: pointer;
+            }
+
+            .btn-plus:hover { background: #d0e0fa; }
+
+            .btn-add {
+                flex: 1;
+                padding: 12px;
+                background: #1a3a6b;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            .btn-add:hover { background: #142d55; }
+
+            /* ── Action footer ── */
+            .btn-confirm {
+                display: block;
+                width: 100%;
+                padding: 16px;
+                background: #1a3a6b;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                font-size: 20px;
+                font-weight: 700;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+            .btn-confirm:hover { background: #142d55; }
+
+            .btn-back {
+                display: block;
+                width: 100%;
+                padding: 14px;
+                background: #900;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                font-size: 18px;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            .btn-back:hover { background: #700; }
+
+            /* ── No-session state ── */
+            .no-session {
+                background: #fff;
+                border-radius: 10px;
+                padding: 40px;
+                text-align: center;
+                color: #555;
+                font-size: 16px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+        </style>
     </head>
 
     <body>
-        <form action="Update" method="post">        
-            <%
-                DecimalFormat dec = new DecimalFormat("#,##0.00");
-                String prefix = (String) request.getParameter("prefix");
-                if (prefix == null || prefix.equals("")) {
-                    prefix = "A";
-                }
+        <form action="Update" method="post">
+        <c:set var="priceFormatted"><fmt:formatNumber value="${bean.r_Price}" pattern="#,##0.00"/></c:set>
 
-                String macNo = (String) session.getAttribute("macno");
+        <div class="page-wrapper">
+            <c:choose>
+                <c:when test="${empty macNo}">
+                    <div class="no-session">
+                        สำหรับสั่งอาหาร<br>
+                        <small style="color:#aaa;">(ฐานข้อมูล: ${dbName})</small>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <input type="hidden" id="txtRIndex" name="txtRIndex" value="${bean.r_Index}" />
+                    <input type="hidden" id="txtPrefix" name="txtPrefix" value="${prefix}" />
 
-                if (macNo == null || macNo.equals("")) {
-                    out.println("สำหรับสั่งอาหาร <br />(ฐานข้อมูล: " + MySQLConnect.DB + ")");
-                } else {
-
-                    BalanceBean bean = (BalanceBean) request.getAttribute("bean");
-            %>
-
-            <input type="hidden" id="txtRIndex" name="txtRIndex" value="<%=bean.getR_Index()%>" />
-            <input type="hidden" id="txtPrefix" name="txtPrefix" value="<%=prefix%>" />
-
-            <table border="0" cellpadding="2" cellspacing="2" style="width: 330x;">
-                <tr>
-                    <th width="321" height="26" align="right" bgcolor="#FF0099">รหัส</th>
-                    <td colspan="2" bgcolor="#FFFFFF">
-                        <input name="txtPCode" type="text" id="txtPCode" value="<%=bean.getR_PluCode()%>" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <th height="26" align="right" bgcolor="#FF0099">ชื่อ</th>
-                    <td colspan="2" bgcolor="#FFFFFF">
-                        <input name="textfield2" type="text" id="textfield2" value="<%=bean.getR_PName()%>" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <th height="26" align="right" bgcolor="#FF0099">ราคา</th>
-                    <td colspan="2" width="367" bgcolor="#FFFFFF">
-                        <input name="textfield3" type="text" id="textfield3" style="text-align:right;" value="<%=dec.format(bean.getR_Price())%>" readonly>
-                        บาท                    </td>
-                </tr>
-                <tr>
-                    <th height="26" align="right" bgcolor="#FF0099">ประเภท</th>
-                    <td colspan="2" bgcolor="#FFFFFF" width="50%">
-                        <%
-                            String saleType = (String) session.getAttribute("saleType");
-                            if (saleType == null) {
-                                saleType = "E";
-                            }
-                        %>
-                        <input type="radio" name="chkType" id="chkType1" value="E" <% if (saleType.equals("E")) {%> checked="CHECKED"<% }%>>
-                        <input type="button" value="นั่งทาน" onClick="chk('E');" style="height: 35px; font-size: 14px;" />
-                        <input type="radio" name="chkType" id="chkType2" value="T" <% if (saleType.equals("T")) {%> checked="CHECKED"<% }%>>
-                        <input type="button" value="ห่อกลับ" onClick="chk('T');" style="height: 35px; font-size: 14px;" />
-                        <input type="radio" name="chkType" id="chkType3" value="D" <% if (saleType.equals("D")) {%> checked="CHECKED"<% }%>>
-                        <input type="button" value="เดลิเวอรี่" onClick="chk('D');" style="height: 35px; font-size: 14px;" />
-                    </td>
-                </tr>
-                <tr>
-                    <th height="26" align="right" bgcolor="#FF0099">จำนวน</th>
-                    <td colspan="2" bgcolor="#FFFFFF">
-                        <input name="txtQtyOrder" type="number" id="txtQtyOrder" value="<%=bean.getR_Quan()%>" style="text-align:right;" readonly>
-                        List</td>
-                </tr>
-                <tr>
-                    <th height="221" align="right" valign="top" bgcolor="#FF0099">ข้อความ</th>
-                    <td colspan="2" valign="middle" bgcolor="#FFFFFF">
-                        <div style="overflow: auto; height: 150px;">
-                            <table width="100%" cellpadding="5" cellspacing="5">                    
-                                <%
-                                    String[] opt = (String[]) OptionFile.getListOption(bean.getR_Group());
-                                    for (int i = 0; i < opt.length; i++) {
-                                %>
-                                <tr><td width="330">
-                                        <label>
-                                            <input type="checkbox" name="chkOpt" id="chkOpt<%=i%>" value="<%=opt[i]%>">
-                                            <input type="button" value="<%=opt[i]%>" onclick="chkThis('<%=i%>')" style="width: 55%; height: 45px; font-size: 18px; background-color: #093; color: #FFF;" />
-                                        </label>                    
-                                    </td></tr>
-                                    <% }%>
-                            </table>
+                    <%-- Product info --%>
+                    <div class="card">
+                        <div class="product-code">${bean.r_PluCode}</div>
+                        <div class="product-name">${bean.r_PName}</div>
+                        <div class="product-meta">
+                            <span class="badge-price">${priceFormatted} บาท</span>
+                            <span class="badge-qty">x <fmt:formatNumber value="${bean.r_Quan}" pattern="#,##0"/></span>
                         </div>
-                        <br />
-                        <span style="font-size: 14px;">
-                            ตัวอย่าง "ไม่หวาน,ไม่..." </span>
-                        <input type="text" name="optAddNew" id="optAddNew" value="" style="height: 45px; width:40%; font-size: 16px;" />
-                    </td>
-                </tr>
-                <%
-                    if (!bean.getR_Pause().equals("P")) {
-                %>
-                <tr>
-                    <th height="26" align="right" bgcolor="#FF0099">เพิ่มจำนวน</th>
-                    <td valign="middle" bgcolor="#FFFFFF">
-                        <input name="txtQtyPlus" type="number" id="txtQtyPlus" value="1" style="width: 50px; height: 25px; font-size: 18px; text-align: center;" readonly>
-                        <input type="button" name="button2" id="button2" value="+" style="height: 25px; width: 40px;font-size: 15px;" onclick="addQty();"></td>
-                    <td align="right" valign="middle" bgcolor="#FFFFFF"><input type="button" name="button" id="button" value="เพิ่ม" style="height: 40px; width: 150px;font-size: 14px;" onClick="addNew();"></td>
-                </tr>
-                <%
-                    }
-                %>
-                <tr>
-                    <td height="28" align="right" bgcolor="#FF0033">&nbsp;</td>
-                    <td height="28" align="right" bgcolor="#FF0033"><input type="submit" name="button4" id="button4" value="ยืนยัน" style="height: 40px; width: 90px; font-size: 16px;"></td>
-                    <td height="28" align="right" bgcolor="#FF0033"><input type="button" name="button3" id="button3" value="กลับเมนูหลัก" style="height: 40px; width: 120px;font-size: 16px;" onClick="back();"></td>
-                </tr>
-            </table>
-            <% }%>
+                        <input type="hidden" id="txtPCode" name="txtPCode" value="${bean.r_PluCode}">
+                    </div>
 
+                    <%-- Sale type --%>
+                    <div class="card">
+                        <div class="card-label">ประเภทการสั่ง</div>
+                        <div class="etd-group">
+                            <input type="radio" name="chkType" id="chkType1" value="E" <c:if test="${saleType == 'E'}">checked</c:if>>
+                            <button type="button" id="btnType1" class="btn-etd <c:if test="${saleType == 'E'}">active</c:if>" onclick="chk('E')">นั่งทาน</button>
+
+                            <input type="radio" name="chkType" id="chkType2" value="T" <c:if test="${saleType == 'T'}">checked</c:if>>
+                            <button type="button" id="btnType2" class="btn-etd <c:if test="${saleType == 'T'}">active</c:if>" onclick="chk('T')">ห่อกลับ</button>
+
+                            <input type="radio" name="chkType" id="chkType3" value="D" <c:if test="${saleType == 'D'}">checked</c:if>>
+                            <button type="button" id="btnType3" class="btn-etd <c:if test="${saleType == 'D'}">active</c:if>" onclick="chk('D')">เดลิเวอรี่</button>
+                        </div>
+                    </div>
+
+                    <%-- Options --%>
+                    <div class="card">
+                        <div class="card-label">ตัวเลือกเพิ่มเติม</div>
+                        <div class="opts-grid">
+                            <c:forEach var="opt" items="${options}" varStatus="vs">
+                            <c:if test="${not empty opt}">
+                                <input type="checkbox" name="chkOpt" id="chkOpt${vs.index}" value="${opt}">
+                                <button type="button" id="btnOpt${vs.index}" class="btn-opt" onclick="chkThis('${vs.index}')">${opt}</button>
+                            </c:if>
+                            </c:forEach>
+                        </div>
+                        <div class="note-hint" style="margin-top:12px;">หมายเหตุเพิ่มเติม เช่น "ไม่หวาน,ไม่ใส่ผัก"</div>
+                        <input type="text" name="optAddNew" id="optAddNew" class="note-input" placeholder="พิมพ์หมายเหตุ..." />
+                    </div>
+
+                    <%-- Add quantity (only if not paused) --%>
+                    <c:if test="${bean.r_Pause ne 'P'}">
+                    <div class="card">
+                        <div class="card-label">เพิ่มจำนวน</div>
+                        <div class="add-qty-row">
+                            <input type="number" name="txtQtyPlus" id="txtQtyPlus" class="qty-display" value="1" readonly>
+                            <button type="button" class="btn-plus" onclick="addQty()">+</button>
+                            <button type="button" class="btn-add" onclick="addNew()">เพิ่มรายการ</button>
+                        </div>
+                    </div>
+                    </c:if>
+
+                    <%-- Actions --%>
+                    <button type="submit" class="btn-confirm">ยืนยัน</button>
+                    <button type="button" class="btn-back" onclick="back()">กลับเมนูหลัก</button>
+
+                </c:otherwise>
+            </c:choose>
+        </div>
         </form>
     </body>
 </html>
