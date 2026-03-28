@@ -7,7 +7,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Order List</title>
-        <script type="text/javascript" src="jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/jquery-latest.min.js"></script>
         <script type="text/javascript">
             function delData(prefix, r_index, pcode, qty) {
                 window.location = "Remove?prefix=" + prefix + "&R_Index=" + r_index + "&PCode=" + qty + "*" + pcode;
@@ -154,7 +154,7 @@
                 box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             }
         </style>
-        <link rel="stylesheet" type="text/css" href="pda.css">
+        <link rel="stylesheet" type="text/css" href="css/pda.css">
     </head>
     <body>
         <div class="page-wrapper">

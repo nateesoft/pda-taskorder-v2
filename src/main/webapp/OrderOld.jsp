@@ -7,7 +7,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>All Item Page</title>
-        <script type="text/javascript" src="jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/jquery-latest.min.js"></script>
         <script type="text/javascript">
             function delData(prefix, r_index, pcode, qty) {
                 $.get("Remove?prefix=" + prefix + "&R_Index=" + r_index + "&PCode=" + qty + "*" + pcode, function (responseJson) {
@@ -225,7 +225,7 @@
                 box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             }
         </style>
-        <link rel="stylesheet" type="text/css" href="pda.css">
+        <link rel="stylesheet" type="text/css" href="css/pda.css">
     </head>
     <body>
         <input type="hidden" id="txtPrefix" value="${prefix}">

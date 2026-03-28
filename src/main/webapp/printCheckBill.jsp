@@ -7,7 +7,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PrintCheckBill(พิมพ์ตรวจสอบ)</title>
-        <script type="text/javascript" src="jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/jquery-latest.min.js"></script>
         <%
             String token = request.getParameter("chkType");
             System.out.print(token);
@@ -44,7 +44,7 @@
 
 
         %>
-        <link rel="stylesheet" type="text/css" href="pda.css">
+        <link rel="stylesheet" type="text/css" href="css/pda.css">
     </head>
 
     <body>

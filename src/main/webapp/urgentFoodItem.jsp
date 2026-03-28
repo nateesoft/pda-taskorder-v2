@@ -6,10 +6,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>ตามอาหาร ลูกค้ารอนาน</title>
-        <script type="text/javascript" src="jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/jquery-latest.min.js"></script>
         <script>
         </script>
-        <link rel="stylesheet" type="text/css" href="pda.css">
+        <link rel="stylesheet" type="text/css" href="css/pda.css">
     </head>
     <body>
         <%
