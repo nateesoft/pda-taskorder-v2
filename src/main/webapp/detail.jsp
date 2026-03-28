@@ -11,7 +11,7 @@
         <title>PDA-ICS</title>
         <script type="text/javascript">
             function back() {
-                window.location = "Order.jsp?prefix=A";
+                window.location = "OrderList?prefix=A";
             }
             function input(v) {
                 document.getElementById("txtQtyOrder").value = v.value;
@@ -31,7 +31,7 @@
                     if (responseJson !== null) {
                         $.each(responseJson, function (key, value) {
                             //var data = value.split(",");
-                            window.location = "Order.jsp?prefix=" + prefix;
+                            window.location = "OrderList?prefix=" + prefix;
                         });
                     }
                 });

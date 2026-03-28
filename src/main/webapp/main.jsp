@@ -552,7 +552,7 @@
 
                 <!-- ── ACTION BAR ── -->
                 <div class="action-bar">
-                    <a href="Order.jsp?prefix=${prefix}">
+                    <a href="OrderList?prefix=${prefix}">
                         <button class="act-btn new-order" id="btnListBill">ใหม่(${billCount})</button>
                     </a>
                     <a href="HistoryOrder?prefix=${prefix}">

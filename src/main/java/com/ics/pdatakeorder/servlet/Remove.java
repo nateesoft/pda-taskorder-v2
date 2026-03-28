@@ -89,11 +89,11 @@ public class Remove extends HttpServlet {
             BalanceControl bc = new BalanceControl();
             bc.updateProSerTable(R_Table, null);
 
-            response.sendRedirect("Order.jsp?prefix=" + Prefix);
+            response.sendRedirect("OrderList?prefix=" + Prefix);
         } else {
             PrintWriter out = response.getWriter();
             out.print("ไม่สามารถลบข้อมูลการสั่งซื้อได้ !!!");
-            response.sendRedirect("Order.jsp?prefix=" + Prefix);
+            response.sendRedirect("OrderList?prefix=" + Prefix);
         }
     }
 

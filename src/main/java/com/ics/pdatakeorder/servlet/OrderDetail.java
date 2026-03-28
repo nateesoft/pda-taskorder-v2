@@ -1,46 +1,43 @@
 package com.ics.pdatakeorder.servlet;
 
-import com.ics.pdatakeorder.control.OptionControl;
+import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
-@WebServlet(name = "Update", urlPatterns = {"/Update"})
-public class Update extends HttpServlet {
+/**
+ *
+ * @author nateelive
+ */
+@WebServlet(name = "OrderDetail", urlPatterns = {"/OrderDetail"})
+public class OrderDetail extends HttpServlet {
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-
-        String r_Index = request.getParameter("txtRIndex");
-        String type = request.getParameter("chkType");
-
-        String opt = "";
-
-        String[] chkOpt = (String[]) request.getParameterValues("chkOpt");
-        if (chkOpt != null) {
-            for (String chkOpt1 : chkOpt) {
-                opt += chkOpt1 + ",";
-            }
-        }
-        
-        String optAdd1 = (String) request.getParameter("optAddNew");
-        if (optAdd1 != null) {
-            opt += optAdd1 + ",";
-        }
-
-        OptionControl oControl = new OptionControl();
-
-        //update option        
-        if (oControl.updateOption(r_Index, opt, type)) {
-            response.sendRedirect("OrderList?prefix=A");
-        } else {
-            out.println("ไม่สามารถอัพเดตรายการสินค้านี้ได้ !!!");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet OrderDetail</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet OrderDetail at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 

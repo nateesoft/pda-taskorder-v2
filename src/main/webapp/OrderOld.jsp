@@ -74,26 +74,26 @@
                 <td height="55px" align="center">${vs.count}</td>
                 <td height="5%" align="center">
                     <c:choose>
-                        <c:when test="${item.R_ETD == 'E'}">นั่งทาน</c:when>
-                        <c:when test="${item.R_ETD == 'T'}"><span style="background-color: #00ff99;">ห่อกลับ</span></c:when>
-                        <c:when test="${item.R_ETD == 'D'}"><span style="background-color: #FF9966;">เดลิเวอรี่</span></c:when>
+                        <c:when test="${item.r_ETD == 'E'}">นั่งทาน</c:when>
+                        <c:when test="${item.r_ETD == 'T'}"><span style="background-color: #00ff99;">ห่อกลับ</span></c:when>
+                        <c:when test="${item.r_ETD == 'D'}"><span style="background-color: #FF9966;">เดลิเวอรี่</span></c:when>
                         <c:otherwise>Unknow</c:otherwise>
                     </c:choose>
                 </td>
-                <td onclick="detail(this);" style="font-size: 15px;" id="${item.R_Index}">${item.R_PluCode} # ${item.R_PName}<br />
-                    <c:if test="${not empty item.R_Opt1}"><u>${item.R_Opt1}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt2}"><u>${item.R_Opt2}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt3}"><u>${item.R_Opt3}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt4}"><u>${item.R_Opt4}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt5}"><u>${item.R_Opt5}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt6}"><u>${item.R_Opt6}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt7}"><u>${item.R_Opt7}</u>,</c:if>
-                    <c:if test="${not empty item.R_Opt8}"><u>${item.R_Opt8}</u>,</c:if>
+                <td onclick="detail(this);" style="font-size: 15px;" id="${item.r_Index}">${item.r_PluCode} # ${item.r_PName}<br />
+                    <c:if test="${not empty item.r_Opt1}"><u>${item.r_Opt1}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt2}"><u>${item.r_Opt2}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt3}"><u>${item.r_Opt3}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt4}"><u>${item.r_Opt4}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt5}"><u>${item.r_Opt5}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt6}"><u>${item.r_Opt6}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt7}"><u>${item.r_Opt7}</u>,</c:if>
+                    <c:if test="${not empty item.r_Opt8}"><u>${item.r_Opt8}</u>,</c:if>
                 </td>
-                <td align="right"><fmt:formatNumber value="${item.R_Quan}" pattern="#,##0"/></td>
-                <td align="right"><fmt:formatNumber value="${item.R_Price}" pattern="#,##0"/></td>
-                <td align="right"><fmt:formatNumber value="${item.R_Total}" pattern="#,##0"/></td>
-                <td align="center">${item.R_Emp}</td>
+                <td align="right"><fmt:formatNumber value="${item.r_Quan}" pattern="#,##0"/></td>
+                <td align="right"><fmt:formatNumber value="${item.r_Price}" pattern="#,##0"/></td>
+                <td align="right"><fmt:formatNumber value="${item.r_Total}" pattern="#,##0"/></td>
+                <td align="center">${item.r_Emp}</td>
             </tr>
             </c:forEach>
         </table>

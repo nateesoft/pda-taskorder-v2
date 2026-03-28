@@ -4,9 +4,25 @@
         <servlet-name>HistoryOrder</servlet-name>
         <servlet-class>com.ics.pdatakeorder.servlet.HistoryOrder</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderList</servlet-name>
+        <servlet-class>com.ics.pdatakeorder.servlet.OrderList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderDetail</servlet-name>
+        <servlet-class>com.ics.pdatakeorder.servlet.OrderDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HistoryOrder</servlet-name>
         <url-pattern>/HistoryOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderList</servlet-name>
+        <url-pattern>/OrderList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderDetail</servlet-name>
+        <url-pattern>/OrderDetail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
