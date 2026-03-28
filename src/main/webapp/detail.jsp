@@ -60,7 +60,8 @@
 
             .page-wrapper {
                 padding: 12px;
-                max-width: 480px;
+                max-width: 560px;
+                margin: 0 auto;
             }
 
             /* ── Cards ── */
@@ -263,6 +264,43 @@
                 color: #555;
                 font-size: 16px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+
+            /* ── Responsive: small phones (< 360px) ── */
+            @media (max-width: 359px) {
+                .product-name      { font-size: 16px; }
+                .badge-price       { font-size: 13px; padding: 4px 8px; }
+                .badge-qty         { font-size: 13px; padding: 4px 8px; }
+                .btn-etd           { font-size: 13px; padding: 10px 2px; }
+                .btn-opt           { font-size: 13px; padding: 8px 10px; }
+                .card              { padding: 12px; }
+                .btn-confirm       { font-size: 17px; padding: 13px; }
+                .btn-back          { font-size: 15px; padding: 11px; }
+            }
+
+            /* ── Responsive: tablets (768px+) ── */
+            @media (min-width: 768px) {
+                .page-wrapper      { padding: 20px; }
+                .card              { padding: 20px; margin-bottom: 16px; }
+                .card-label        { font-size: 13px; margin-bottom: 12px; }
+                .product-code      { font-size: 14px; }
+                .product-name      { font-size: 24px; margin-bottom: 14px; }
+                .badge-price       { font-size: 18px; padding: 7px 16px; }
+                .badge-qty         { font-size: 17px; padding: 7px 16px; }
+                .btn-etd           { font-size: 17px; padding: 15px 8px; }
+                .btn-opt           { font-size: 16px; padding: 12px 18px; }
+                .opts-grid         { max-height: 240px; gap: 10px; }
+                .note-input        { font-size: 16px; padding: 12px 14px; }
+                .qty-display       { width: 80px; font-size: 22px; }
+                .btn-plus          { width: 54px; height: 54px; font-size: 26px; }
+                .btn-add           { font-size: 18px; }
+                .btn-confirm       { font-size: 22px; padding: 18px; margin-bottom: 12px; }
+                .btn-back          { font-size: 20px; padding: 16px; }
+            }
+
+            /* ── Responsive: desktop (1024px+) ── */
+            @media (min-width: 1024px) {
+                .page-wrapper      { max-width: 680px; padding: 28px 0; }
             }
         </style>
     </head>
