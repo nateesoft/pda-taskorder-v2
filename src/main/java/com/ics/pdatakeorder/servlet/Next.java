@@ -39,12 +39,12 @@ public class Next extends HttpServlet {
         session.setAttribute("empCode", "");
         session.setAttribute("custCount", "");
         session.setAttribute("saleType", "");
-        response.sendRedirect("login.jsp");
-        
-        
         session.setAttribute("pluCode", "");
         session.setAttribute("pluName", "");
         session.setAttribute("pindex", "");
+
+        String macNo = (String) session.getAttribute("macno");
+        response.sendRedirect("Welcome?macno=" + macNo);
 
     }
 

@@ -164,7 +164,7 @@
             </tr>
             <% }%>
         </table>
-        <p><a href="main.jsp?prefix=<%=prefix%>">                
+        <p><a href="Login2?prefix=<%=prefix%>">                
                 <input type="button" name="button" id="button" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
             </a></p>
         <label>
@@ -262,7 +262,7 @@
             </td>
         </div>
         <div align="center">
-            <p><a href="main.jsp?prefix=<%=prefix%>">                
+            <p><a href="Login2?prefix=<%=prefix%>">
                     <input type="button" name="button" id="button20" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
                 </a></p>
         </div>

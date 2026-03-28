@@ -134,7 +134,7 @@
             <% }%>
             
         </table>
-        <p><a href="main.jsp?prefix=<%=prefix%>">                
+        <p><a href="Login2?prefix=<%=prefix%>">                
                 <input type="button" name="button" id="button" value="กลับสู่เมนู" style="width: 100%; height: 60px; font-size: 32px; background-color: #900; color: #FFF;">
             </a></p>
         </div>

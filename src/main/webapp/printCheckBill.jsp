@@ -57,7 +57,7 @@
             <img src="img/QR-Code.jpg" alt="Alert!" width="300px" height="300px" style="cursor: auto;">
         </div>
         <div align="center"> 
-            <p><a href="main.jsp?prefix=<%=prefix%>">
+            <p><a href="Login2?prefix=<%=prefix%>">
                     <td width="76" align="center">
                         <input type="button" name="print" id="print" value="Print OK!" onclick=""  style="width: 100%; height: 80px; font-size: 30px; background-color:#B22222; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
                     </td>
