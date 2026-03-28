@@ -265,7 +265,7 @@
                         <input type="button" name="button" id="btnListBill" value="New Order(<%=dataTable[0]%>)" style="width: 150px; height: 60px; font-size: 24px; background-color: #909; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
                     </a>
                 </td>
-                <td width="125" align="center"><a href="OrderOld.jsp?prefix=<%=prefix%>">
+                <td width="125" align="center"><a href="HistoryOrder?prefix=<%=prefix%>">
                         <input type="button" name="button2" id="button2" value="Old Order" style="width: 120px; height: 60px; font-size: 24px; background-color: #909; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
                     </a>
                 </td>

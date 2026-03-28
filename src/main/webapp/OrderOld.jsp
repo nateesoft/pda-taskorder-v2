@@ -1,15 +1,6 @@
-<%@page import="java.util.List"%>
-<%@page import="com.ics.pdatakeorder.util.ThaiUtil"%>
-<%@page import="com.ics.pdatakeorder.model.PKicTran"%>
-<%@page import="com.ics.pdatakeorder.model.PKicTranBean"%>
-<%@page import="com.ics.pdatakeorder.model.ControlPrintCheckBill"%>
-<%@page import="java.text.DecimalFormat"%>
-<%@page import="com.ics.pdatakeorder.control.BalanceControl"%>
-<%@page import="com.ics.pdatakeorder.model.BalanceBean"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="com.ics.pdatakeorder.control.EmployControl"%>
-<%@page import="com.ics.pdatakeorder.model.ControlPrintCheckBill"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -68,13 +59,6 @@
         <link rel="stylesheet" type="text/css" href="pda.css">
     </head>
     <body>
-        <%
-            int size = 0;
-            String prefix = (String) request.getParameter("prefix");
-            if (prefix == null || prefix.equals("")) {
-                prefix = "A";
-            }
-        %>
         <table width="100%" border="0" id="tableBill">
             <tr>
                 <th width="40" bgcolor="#00CCFF">#</th>
@@ -85,86 +69,35 @@
                 <th width="83" bgcolor="#00CCFF">รวม</th>
                 <th width="200" bgcolor="#00CCFF">พนักงาน</th>
             </tr>
-            <%
-                BalanceControl bc = new BalanceControl();
-                DecimalFormat dec = new DecimalFormat("#,##0");
-                String table = (String) session.getAttribute("tableNo");
-                if (table == null) {
-                    table = "";
-                }
-                List<BalanceBean> listBalance = bc.getAllBalanceHold(table);
-                if (listBalance == null) {
-                    listBalance = new ArrayList();
-                }
-                size = listBalance.size();
-                int index = 0;
-                for (int i = 0; i < listBalance.size(); i++) {
-                    index++;
-                    BalanceBean balanceBean = (BalanceBean) listBalance.get(i);
-            %>
+            <c:forEach var="item" items="${listBalance}" varStatus="vs">
             <tr>
-                <td height="55px" align="center"><%=index%></td>
+                <td height="55px" align="center">${vs.count}</td>
                 <td height="5%" align="center">
-                    <%
-                        if (balanceBean.getR_ETD().equals("E")) {
-                            out.println("นั่งทาน");
-                        } else if (balanceBean.getR_ETD().equals("T")) {%>
-                    <span style="background-color: #00ff99;">ห่อกลับ</span>
-                    <%
-                    } else if (balanceBean.getR_ETD().equals("D")) {%>
-                    <span style="background-color: #FF9966;">เดลิเวอรี่</span>                    
-                    <%} else {
-                            out.println("Unknow");
-                        }
-                    %>
+                    <c:choose>
+                        <c:when test="${item.R_ETD == 'E'}">นั่งทาน</c:when>
+                        <c:when test="${item.R_ETD == 'T'}"><span style="background-color: #00ff99;">ห่อกลับ</span></c:when>
+                        <c:when test="${item.R_ETD == 'D'}"><span style="background-color: #FF9966;">เดลิเวอรี่</span></c:when>
+                        <c:otherwise>Unknow</c:otherwise>
+                    </c:choose>
                 </td>
-                <td onclick="detail(this);" style="font-size: 15px;" id="<%=balanceBean.getR_Index()%>"><%=balanceBean.getR_PluCode()%> # <%=balanceBean.getR_PName()%><br />
-                    <%
-
-                        String opt1 = balanceBean.getR_Opt1();
-                        String opt2 = balanceBean.getR_Opt2();
-                        String opt3 = balanceBean.getR_Opt3();
-                        String opt4 = balanceBean.getR_Opt4();
-                        String opt5 = balanceBean.getR_Opt5();
-                        String opt6 = balanceBean.getR_Opt6();
-                        String opt7 = balanceBean.getR_Opt7();
-                        String opt8 = balanceBean.getR_Opt8();
-
-                        if (!opt1.equals("")) {
-                            out.print("<u>" + opt1 + "</u>,");
-                        }
-                        if (!opt2.equals("")) {
-                            out.print("<u>" + opt2 + "</u>,");
-                        }
-                        if (!opt3.equals("")) {
-                            out.print("<u>" + opt3 + "</u>,");
-                        }
-                        if (!opt4.equals("")) {
-                            out.print("<u>" + opt4 + "</u>,");
-                        }
-                        if (!opt5.equals("")) {
-                            out.print("<u>" + opt5 + "</u>,");
-                        }
-                        if (!opt6.equals("")) {
-                            out.print("<u>" + opt6 + "</u>,");
-                        }
-                        if (!opt7.equals("")) {
-                            out.print("<u>" + opt7 + "</u>,");
-                        }
-                        if (!opt8.equals("")) {
-                            out.print("<u>" + opt8 + "</u>,");
-                        }
-                    %>
+                <td onclick="detail(this);" style="font-size: 15px;" id="${item.R_Index}">${item.R_PluCode} # ${item.R_PName}<br />
+                    <c:if test="${not empty item.R_Opt1}"><u>${item.R_Opt1}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt2}"><u>${item.R_Opt2}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt3}"><u>${item.R_Opt3}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt4}"><u>${item.R_Opt4}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt5}"><u>${item.R_Opt5}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt6}"><u>${item.R_Opt6}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt7}"><u>${item.R_Opt7}</u>,</c:if>
+                    <c:if test="${not empty item.R_Opt8}"><u>${item.R_Opt8}</u>,</c:if>
                 </td>
-
-                <td align="right"><%=dec.format(balanceBean.getR_Quan())%></td>
-                <td align="right"><%=dec.format(balanceBean.getR_Price())%></td>
-                <td align="right"><%=dec.format(balanceBean.getR_Total())%></td>
-                <td align="center"><%=balanceBean.getR_Emp()%></td>
+                <td align="right"><fmt:formatNumber value="${item.R_Quan}" pattern="#,##0"/></td>
+                <td align="right"><fmt:formatNumber value="${item.R_Price}" pattern="#,##0"/></td>
+                <td align="right"><fmt:formatNumber value="${item.R_Total}" pattern="#,##0"/></td>
+                <td align="center">${item.R_Emp}</td>
             </tr>
-            <% }%>
+            </c:forEach>
         </table>
-        <p><a href="Login2?prefix=<%=prefix%>">                
+        <p><a href="Login2?prefix=${prefix}">
                 <input type="button" name="button" id="button" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
             </a></p>
         <label>
@@ -181,47 +114,20 @@
                 <th width="65" bgcolor="#00CCFF">เชฟกดรับ</th>
                 <th width="65" bgcolor="#00CCFF">สถานะ</th>
             </tr>
-            <%
-                if (size > 0) {
-                    PKicTran kicTran = new PKicTran();
-                    List<PKicTranBean> list = kicTran.getKicTran(table);
-                    if (list.size() > 0) {
-                        for (int i = 0; i < list.size(); i++) {
-            %>
-
-
-            <td align="center" height="30px">
-                <%=(list.get(i).getpQty())%>
-            </td>
-            <td align="center">
-                <%=(list.get(i).getpEtd())%>
-            </td>
-            <td>
-                <%=(ThaiUtil.ASCII2Unicode(list.get(i).getpDesc()))%>
-            <td align="center">
-                <%=(list.get(i).getpWaitTime())%>
-            </td>
-            <td align="center">
-                <%=(list.get(i).getShowDisplayAlert())%>
-            </td>
-
-            <td align="center">
-                <%-- <img src="img/alert.gif" alt="Alert!" width="45" height="45"  onclick="location.href = 'urgentFoodItem.jsp?item=<%=(list.get(i).getpCode())%>?table=<%=table%>?pluName<%=(ThaiUtil.ASCII2Unicode(list.get(i).getpDesc()))%>';" style="cursor: pointer;">--%>
-                <img src="img/alert.gif" alt="Alert!" width="45" height="45"  onclick="location.href = 'urgentFoodItem.jsp?tableNo=<%=table%>&pluCode=<%=(list.get(i).getpCode())%>&pluName=<%=((list.get(i).getpDesc()))%>&pindex=<%=list.get(i).getpIndex()%>';" style="cursor: pointer;">
-            </td>   
-
-
+            <c:forEach var="kic" items="${listKicTran}">
             <tr>
-                <%
-                            }
-
-                        }
-                    } else {
-                        //PKicTran kicTran = new PKicTran();
-                        //kicTran.clearKicTran(table);
-                    }
-                %>
-
+                <td align="center" height="30px">${kic.PQty}</td>
+                <td align="center">${kic.PEtd}</td>
+                <td>${kic.PDesc}</td>
+                <td align="center">${kic.PWaitTime}</td>
+                <td align="center">${kic.showDisplayAlert}</td>
+                <td align="center">
+                    <img src="img/alert.gif" alt="Alert!" width="45" height="45"
+                         onclick="location.href = 'urgentFoodItem.jsp?tableNo=${table}&pluCode=${kic.PCode}&pluName=${kic.PDesc}&pindex=${kic.PIndex}';"
+                         style="cursor: pointer;">
+                </td>
+            </tr>
+            </c:forEach>
         </table>
     </form>
     <table width="100%" border="0" id="empty0">
@@ -230,7 +136,7 @@
         </tr>
     </table>
     <form name="frmAdd" method="get" action="printCheckBill.jsp">
-        <div style=" alignment-adjust:  central; width: 100%; border: 10px #002A80; border-collapse:  collapse; align-items:  center"> 
+        <div style=" alignment-adjust:  central; width: 100%; border: 10px #002A80; border-collapse:  collapse; align-items:  center">
             <table width="100%" border="0" id="footer" align="center">
                 <tr>
                     <td align="center" border="0">
@@ -246,31 +152,32 @@
                         <input type="button" style="font-size: 22px; width: 200px; background-color:  #FFE4B5; padding-bottom: 10px;" onclick="show5();" value="Station5"><br />
                         <input type="radio" name="chkType" id="radio6" value="Station6">
                         <input type="button" style="font-size: 22px; width: 200px; background-color:  #FFE4B5; padding-bottom: 10px;" onclick="show6();" value="Station6"><br />
+                    </td>
                 </tr>
             </table>
         </div>
         <div align="center">
             <td width="76" align="center">
-                <input type="text" name="table" id="table" value="<%=table%>">
-                <input type="submit" name="print" id="print" value="Check Bill Print" onclick="<%%>"  style="width: 100%; height: 80px; font-size: 30px; background-color: #909; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
+                <input type="text" name="table" id="table" value="${table}">
+                <input type="submit" name="print" id="print" value="Check Bill Print" style="width: 100%; height: 80px; font-size: 30px; background-color: #909; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
             </td>
         </div>
         <div align="center">
             <td width="76" align="center">
-                <input type="text" name="table" id="table" value="<%=table%>">
-                <input type="submit" name="printAll" id="print" value="Check Bill All" onclick="<%%>"  style="width: 100%; height: 80px; font-size: 30px; background-color: #909; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
+                <input type="text" name="table" id="table" value="${table}">
+                <input type="submit" name="printAll" id="print" value="Check Bill All" style="width: 100%; height: 80px; font-size: 30px; background-color: #909; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
             </td>
         </div>
         <div align="center">
-            <p><a href="Login2?prefix=<%=prefix%>">
+            <p><a href="Login2?prefix=${prefix}">
                     <input type="button" name="button" id="button20" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;">
                 </a></p>
         </div>
     </form>
-    <div align="center"> 
-        <p><a href="printKictranAgain.jsp?table=<%=table%>"</p>
+    <div align="center">
+        <p><a href="printKictranAgain.jsp?table=${table}"></a></p>
         <td width="76" align="center">
-            <input type="submit" name="print" id="urgentfood" value="ตามอาหารที่ยังไม่ได้" onclick="<%%>"  style="width: 100%; height: 80px; font-size: 30px; background-color: dodgerblue; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
+            <input type="submit" name="print" id="urgentfood" value="ตามอาหารที่ยังไม่ได้" style="width: 100%; height: 80px; font-size: 30px; background-color: dodgerblue; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;">
         </td>
     </div>
 </body>

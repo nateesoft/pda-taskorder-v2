@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import com.ics.pdatakeorder.util.DateConvert;
-import com.ics.pdatakeorder.util.MSG;
 import com.ics.pdatakeorder.util.ThaiUtil;
 import java.sql.SQLException;
 import java.util.List;
@@ -76,14 +75,14 @@ public class PKicTran {
                 while (rs.next()) {
                     PKicTranBean kicTranBean = new PKicTranBean();
                     ProductBean bean = ProductControl.getData(rs.getString("pcode"));
-                    kicTranBean.setpItemNo(rs.getString("pitemno"));
-                    kicTranBean.setpCode(rs.getString("pcode"));
-                    kicTranBean.setpDesc(bean.getPDesc());
-                    kicTranBean.setpIndex(rs.getString("pindex"));
-                    kicTranBean.setpTable(rs.getString("ptable"));
-                    kicTranBean.setpTimeIn(rs.getString("ptimeIn"));
-                    kicTranBean.setpQty(rs.getInt("pqty"));
-                    kicTranBean.setpFlage(rs.getString("pflage"));
+                    kicTranBean.setPItemNo(rs.getString("pitemno"));
+                    kicTranBean.setPCode(rs.getString("pcode"));
+                    kicTranBean.setPDesc(bean.getPDesc());
+                    kicTranBean.setPIndex(rs.getString("pindex"));
+                    kicTranBean.setPTable(rs.getString("ptable"));
+                    kicTranBean.setPTimeIn(rs.getString("ptimeIn"));
+                    kicTranBean.setPQty(rs.getInt("pqty"));
+                    kicTranBean.setPFlage(rs.getString("pflage"));
                     String etd = rs.getString("petd");
                     kicTranBean.setShowDisplayAlert(rs.getString("R_ShowDisplayAlert"));
                     if (etd.equals("E")) {
@@ -98,14 +97,14 @@ public class PKicTran {
                     if (etd.equals("P")) {
                         etd = "Pinto";
                     }
-                    
+
                     if (etd.equals("W")) {
                         etd = "WholeSale";
                     }
-                    kicTranBean.setpEtd(etd);
+                    kicTranBean.setPEtd(etd);
                     String timeWait;
-                    timeWait = getDefferentTime(kicTranBean.getpTimeIn(), dc.GetCurrentTime());
-                    kicTranBean.setpWaitTime(timeWait);
+                    timeWait = getDefferentTime(kicTranBean.getPTimeIn(), dc.GetCurrentTime());
+                    kicTranBean.setPWaitTime(timeWait);
                     list.add(kicTranBean);
                 }
             }

@@ -45,13 +45,14 @@
         %>
         <div align="center"> 
             <p>
-                <a href="OrderOld.jsp?prefix=<%=prefix%>">
-                <input type="button" name="print" id="print" value="ระบบกำลังแจ้งเตือนห้องครัว!" onclick=""  style="width: 100%; height: 80px; font-size: 30px; background-color:#B22222; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;" />
+                <a href="HistoryOrder?prefix=<%=prefix%>">
+                    <input type="button" name="print" id="print" value="ระบบกำลังแจ้งเตือนห้องครัว!" onclick=""  style="width: 100%; height: 80px; font-size: 30px; background-color:#B22222; color: #fff; border-radius: 10px 0px 10px 0px; border: 1px solid;" />
+                </a>
             </p>
         </div>
         <div align="center">
             <p>
-                <a href="Login2?prefix=<%=prefix%>">               
+                <a href="Login2?prefix=<%=prefix%>">
                     <input type="button" name="button" id="button20" value="กลับเมนูหลัก" style="width: 100%; height: 60px; font-size: 28px; background-color: #900; color: #FFF;" />
                 </a>
             </p>

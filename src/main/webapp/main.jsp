@@ -555,7 +555,7 @@
                     <a href="Order.jsp?prefix=${prefix}">
                         <button class="act-btn new-order" id="btnListBill">ใหม่(${billCount})</button>
                     </a>
-                    <a href="OrderOld.jsp?prefix=${prefix}">
+                    <a href="HistoryOrder?prefix=${prefix}">
                         <button class="act-btn check-order">ตรวจสอบ</button>
                     </a>
                     <button class="act-btn send-kitchen" onclick="back();" style="flex:1;">ส่งครัว</button>
