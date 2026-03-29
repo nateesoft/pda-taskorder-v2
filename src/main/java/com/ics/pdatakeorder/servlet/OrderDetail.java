@@ -47,7 +47,6 @@ public class OrderDetail extends HttpServlet {
         request.setAttribute("prefix", prefix);
         request.setAttribute("macNo", macNo);
         request.setAttribute("saleType", saleType);
-        request.setAttribute("dbName", MySQLConnect.DB);
 
         BalanceBean bean = (BalanceBean) request.getAttribute("bean");
         if (macNo != null && !macNo.isEmpty() && bean != null) {

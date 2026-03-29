@@ -39,9 +39,6 @@ public class Welcome extends HttpServlet {
             session.setAttribute("saleType", "");
         }
 
-        // Prepare attributes for login.jsp
-        request.setAttribute("dbName", MySQLConnect.DB);
-
         EmployControl empCon = new EmployControl();
         request.setAttribute("showEmployField", empCon.checkEmployUse());
 

@@ -340,18 +340,6 @@
         </style>
 
         <script type="text/javascript">
-            function autoFitText() {
-                document.querySelectorAll('.auto-fit-text').forEach(function(btn) {
-                    var size = 18;
-                    btn.style.fontSize = size + 'px';
-                    while (btn.scrollWidth > btn.clientWidth && size > 9) {
-                        size--;
-                        btn.style.fontSize = size + 'px';
-                    }
-                });
-            }
-            document.addEventListener('DOMContentLoaded', autoFitText);
-
             function plus() {
                 var cass = document.getElementById("txtOrderQty");
                 var num = parseInt(cass.value);

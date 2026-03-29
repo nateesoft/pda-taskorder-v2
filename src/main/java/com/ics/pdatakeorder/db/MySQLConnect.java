@@ -8,34 +8,26 @@ public class MySQLConnect {
     private String msgError = "พบการเชื่อมต่อมีปัญหา ไม่สามารถดำเนินการต่อได้\nท่านต้องการปิดโปรแกรมอัตโนมัติหรือไม่ ?";
 
     private Connection connect;
-    public static String server;
-    public static String db;
-    public static String DB;
-    public static String username;
-    public static String password;
-    public static String port;
-    public static String charset;
-    public static String fontSize;
-    public static String inputTable;
+    private final static String MYSQL_SERVER;
+    private final static String MYSQL_DATABASE;
+    private final static String MYSQL_USER;
+    private final static String MYSQL_PASS;
+    private final static String MYSQL_PORT;
     
     static {
-        server = "localhost";
-        db = "MyRestaurantPaiboon";
-        DB = "MyRestaurantPaiboon";
-        username = "root";
-        password = "nathee2024";
-        port = "3307";
-        charset = "utf-8";
-        fontSize = "170%";
-        inputTable = "text";
+        MYSQL_SERVER = "localhost";
+        MYSQL_DATABASE = "MyRestaurantPaiboon";
+        MYSQL_USER = "root";
+        MYSQL_PASS = "nathee2024";
+        MYSQL_PORT = "3307";
     }
 
     public void open() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + db + "?characterEncoding=utf-8", username, password);
+            connect = DriverManager.getConnection("jdbc:mysql://" + MYSQL_SERVER + ":" + MYSQL_PORT + "/" + MYSQL_DATABASE + "?characterEncoding=utf-8", MYSQL_USER, MYSQL_PASS);
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
@@ -43,8 +35,8 @@ public class MySQLConnect {
         if (connect != null) {
             try {
                 connect.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
         }
     }

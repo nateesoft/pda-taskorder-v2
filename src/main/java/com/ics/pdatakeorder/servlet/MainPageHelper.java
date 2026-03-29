@@ -89,6 +89,5 @@ public class MainPageHelper {
         request.setAttribute("headerMenu",    hMenu);
         request.setAttribute("headerPrefixes", PREFIXES);
         request.setAttribute("menuItems",     menuItems);
-        request.setAttribute("fontSize",      MySQLConnect.fontSize);
     }
 }

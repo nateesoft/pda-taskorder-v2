@@ -238,14 +238,13 @@
                 <div class="error-card">
                     <div class="error-icon">⚙️</div>
                     <h2>ยังไม่ได้ตั้งค่าเครื่อง</h2>
-                    <p>กรุณาตั้งค่า Machine No ก่อนใช้งาน<br/>(ฐานข้อมูล: ${dbName})</p>
+                    <p>กรุณาตั้งค่า Machine No ก่อนใช้งาน</p>
                 </div>
             </c:when>
             <c:otherwise>
                 <div class="card">
                     <div class="card-header">
                         <div class="app-name">ICS — PDA Take Order</div>
-                        <div class="db-name">${dbName}</div>
                     </div>
 
                     <form action="Login" method="post" onsubmit="return valid()">

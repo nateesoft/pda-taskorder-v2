@@ -313,8 +313,7 @@
             <c:choose>
                 <c:when test="${empty macNo}">
                     <div class="no-session">
-                        สำหรับสั่งอาหาร<br>
-                        <small style="color:#aaa;">(ฐานข้อมูล: ${dbName})</small>
+                        สำหรับสั่งอาหาร
                     </div>
                 </c:when>
                 <c:otherwise>
