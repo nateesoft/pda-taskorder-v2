@@ -70,7 +70,7 @@ public class HistoryOrder extends HttpServlet {
         request.setAttribute("size", size);
         request.setAttribute("listKicTran", listKicTran);
 
-        RequestDispatcher req = request.getRequestDispatcher("/OrderOld.jsp");
+        RequestDispatcher req = request.getRequestDispatcher("/HistoryOrder.jsp");
         req.forward(request, response);
     }
 

@@ -297,7 +297,7 @@
                     <div class="empty-kic">ไม่มีรายการที่กำลังปรุง</div>
                 </c:when>
                 <c:otherwise>
-                    <form name="frmUrgentFood" action="urgentFoodItem.jsp">
+                    <form name="frmUrgentFood" action="UrgentFoodItem">
                         <table class="card-table kic">
                             <thead>
                                 <tr>
@@ -319,7 +319,7 @@
                                     <td align="center" style="font-size:13px;">${kic.showDisplayAlert}</td>
                                     <td align="center">
                                         <button type="button" class="btn-urgent"
-                                                onclick="location.href='urgentFoodItem.jsp?tableNo=${table}&pluCode=${kic.PCode}&pluName=${kic.PDesc}&pindex=${kic.PIndex}'">
+                                                onclick="location.href='UrgentFoodItem?tableNo=${table}&pluCode=${kic.PCode}&pluName=${kic.PDesc}&pindex=${kic.PIndex}'">
                                             ตาม!
                                         </button>
                                     </td>
@@ -333,7 +333,7 @@
 
             <%-- ── Station selector ── --%>
             <div class="section-label">เลือกเครื่องปริ้นต์</div>
-            <form name="frmAdd" method="get" action="printCheckBill.jsp">
+            <form name="frmAdd" method="get" action="PrintCheckBill">
                 <input type="hidden" name="table" value="${table}">
 
                 <div class="station-grid">
@@ -365,8 +365,7 @@
             </form>
 
             <%-- ── Urgent food ── --%>
-            <a class="btn-urgent-food" href="printKictranAgain.jsp?table=${table}">ตามอาหารที่ยังไม่ได้</a>
-
+            <a class="btn-urgent-food" href="PrintKictranAgain?table=${table}">ตามอาหารที่ยังไม่ได้</a>
         </div>
     </body>
 </html>

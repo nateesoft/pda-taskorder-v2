@@ -12,6 +12,18 @@
         <servlet-name>OrderDetail</servlet-name>
         <servlet-class>com.ics.pdatakeorder.servlet.OrderDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PrintCheckBill</servlet-name>
+        <servlet-class>com.ics.pdatakeorder.servlet.PrintCheckBill</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PrintKictranAgain</servlet-name>
+        <servlet-class>com.ics.pdatakeorder.servlet.PrintKictranAgain</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UrgentFoodItem</servlet-name>
+        <servlet-class>com.ics.pdatakeorder.servlet.UrgentFoodItem</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HistoryOrder</servlet-name>
         <url-pattern>/HistoryOrder</url-pattern>
@@ -23,6 +35,18 @@
     <servlet-mapping>
         <servlet-name>OrderDetail</servlet-name>
         <url-pattern>/OrderDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrintCheckBill</servlet-name>
+        <url-pattern>/PrintCheckBill</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrintKictranAgain</servlet-name>
+        <url-pattern>/PrintKictranAgain</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UrgentFoodItem</servlet-name>
+        <url-pattern>/UrgentFoodItem</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
