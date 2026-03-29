@@ -1,17 +1,10 @@
 package com.ics.pdatakeorder.model;
 
-/**
- * Presentation wrapper for a single menu button on the main ordering page.
- * All display-logic decisions (bgColor, back-button state) are computed
- * in MainPageHelper so that main.jsp requires no Java scriptlets.
- */
 public class MenuDisplayItem {
 
     private MenuSetup menu;
     private String bgColor;
-    /** True when this is the last cell and represents the "back to main menu" button. */
     private boolean backButton;
-    /** The prefix to navigate back to (e.g. "A"). Only meaningful when backButton == true. */
     private String backPrefix;
 
     public MenuDisplayItem() {

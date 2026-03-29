@@ -88,7 +88,6 @@ public class BillNoBean {
      private double B_CrCardAmt = 0.00;
      private double B_CrCurPoint = 0.00;
      private double B_CrSumPoint = 0.00;
-//     private double B_Entertain;
      private double B_Entertain1 = 0.00;
      private double B_VoucherDiscAmt = 0.00;
      private double B_VoucherOver = 0.00;
@@ -101,15 +100,7 @@ public class BillNoBean {
      private String B_ROUNDCLOSE = "N";
      private String Employ = "";
      private String B_CuponName = "";
-     
-     
-//    public double getB_Entertain() {
-//        return B_Entertain;
-//    }
-//
-//    public void setB_Entertain(double B_Entertain) {
-//        this.B_Entertain = B_Entertain;
-//    }
+
     public double getB_Entertain1() {
         return B_Entertain1;
     }

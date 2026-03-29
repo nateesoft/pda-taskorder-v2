@@ -1,7 +1,5 @@
 package com.ics.pdatakeorder.model;
 
-import com.ics.pdatakeorder.control.PosControl;
-
 public class POSHWSetup {
 
     private String terminal="";
@@ -55,12 +53,6 @@ public class POSHWSetup {
     private String UseFloorPlan = "N";
     private String TakeOrderChk = "N";
     private String RFIDPort = "NONE";
-    
-    public static POSHWSetup Bean(String MacNo){
-        PosControl pos = new PosControl();
-        
-        return pos.getData(MacNo);
-    }
 
     public String getTerminal() {
         return terminal;

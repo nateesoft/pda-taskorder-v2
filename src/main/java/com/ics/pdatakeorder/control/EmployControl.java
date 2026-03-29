@@ -6,7 +6,7 @@ import com.ics.pdatakeorder.util.ThaiUtil;
 import java.sql.SQLException;
 
 public class EmployControl {
-    
+
     private final MySQLConnect mysql = new MySQLConnect();
 
     public boolean checkEmployUse() {
@@ -58,13 +58,13 @@ public class EmployControl {
                     empName = ThaiUtil.ASCII2Unicode(rs.getString("name"));
                 }
             }
-            
+
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }finally{
+        } finally {
             mysql.close();
         }
-            
+
         return empName;
     }
 

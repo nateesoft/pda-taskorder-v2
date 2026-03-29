@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ics.pdatakeorder.model;
 
 /**
@@ -38,6 +33,7 @@ import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import com.ics.pdatakeorder.util.DateConvert;
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.awt.print.PrinterException;
 
 public class PrintCheckBillReport {
 
@@ -48,10 +44,7 @@ public class PrintCheckBillReport {
 
     private Connection connect = null;
 
-//    private static final String MYSQL_HOST = "jdbc:mysql://localhost:3307/";
     private static final String MYSQL_HOST = "jdbc:mysql://" + server + ":3307/";
-
-//    private static final String MYSQL_DB = "salarydb";
     private static final String MYSQL_DB = db;
     private static final String MYSQL_USER_PASS = "user=" + dbUser + "&password=" + dbPassword;
     private static final String MYSQL_URL = MYSQL_HOST + MYSQL_DB + "?" + MYSQL_USER_PASS;
@@ -63,110 +56,85 @@ public class PrintCheckBillReport {
     public void PrintCheckBillReport(
             final String tableNo, final String printerName, final String Macno) throws Exception {
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-        TableFileControl tbControl = new TableFileControl();
-        TableFileBean tbBean = tbControl.getData(tableNo);
-
-        DateConvert dc = new DateConvert();
-        PosControl control = new PosControl();
-        POSHWSetup POSHWSetup = control.getData(Macno);
-        POSConfigSetup bean = new POSConfigSetup();
-        bean = control.getData();
-        ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
-
-        try {
-            if (tbBean.getTItem() > 0 && ConfigFile.getProperties("printerStation").equals("true")) {
-                PrintCheckBillReport report = new PrintCheckBillReport();
-
-                // open connection
-                report.openConnection();
-
-                // source file
-//                        String reportJasper = new File(".").getCanonicalPath() + JASPER_FILE;
-//                        String sourceFileName = "D:\\CPS_Restaurant650\\src\\java\\printReport\\printCheckBillReport.jrxml";
-//                        String sourceFileName = "D:\\pdaV.EngTabletOppoA12\\src\\java\\printReport\\printCheckBillReport.jrxml";
-                String sourceFileName = "D:\\Code JavaFrom Dell\\pdaV.EngTabletOppoA12\\src\\java\\printReport\\printCheckBillReport.jrxml";
-                 sourceFileName = "D:\\Report\\printCheckBillReport.jrxml";
-                String reportSource = JasperCompileManager.compileReportToFile(sourceFileName);
-                // set parameters
-                Map param = new HashMap();
-                //Header
-                param.put("headTitle", "*ใบตรวจสอบรายการไม่ใช่ใบเสร็จรับเงิน*");
-                param.put("tableNo", tbBean.getTcode());
-                param.put("heading1", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading1()));
-                param.put("heading2", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading2()));
-                param.put("heading3", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading3()));
-                param.put("heading4", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading4()));
-                param.put("textHeader", dc.dateGetToShow(dc.GetCurrentDate()) + " " + dc.GetCurrentTime() + "  Cashier:" + ThaiUtil.ASCII2Unicode(tbBean.getCashier()) + " Mac:" + tbBean.getMacNo());
-                param.put("printerName", printerName);
-
-                //Footer
-                param.put("item", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTItem())));
-                param.put("subTotal", ThaiUtil.ASCII2Unicode(df.format(tbBean.getTAmount())));
-                param.put("netTotal", ThaiUtil.ASCII2Unicode(df.format(tbBean.getNetTotal())));
-                param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
-                param.put("textVat", ThaiUtil.ASCII2Unicode(POSHWSetup.getFootting1()));
-
-//                    param.put("cust_Contact", ThaiUtil.ASCII2Unicode(memberBean.getMember_HomeTel() + " แฟกซ์: " + memberBean.getMember_Fax() + " มือถือ " + memberBean.getMember_Mobile()));
-//                    param.put("cust_ID", ThaiUtil.ASCII2Unicode(memberBean.getMember_Code() + " : " + memberBean.getMember_NameThai() + " " + memberBean.getMember_SurnameThai()));
-//                    // fill report to run jasper file
-//                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportJasper, param, report.getConnection());
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, report.getConnection());
-//Auto Print NotPreview
-//                    JasperPrintManager.printReport(jasperPrint, false);
-
-                //Class Printer Job
-                PrinterJob printerJob = PrinterJob.getPrinterJob();
-
-                PageFormat pageFormat = PrinterJob.getPrinterJob().defaultPage();
-                printerJob.defaultPage(pageFormat);
-
-                int selectedService = 0;
-
-                AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
-//            AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerNameShort, null));
-
-                PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, attributeSet);
-
-                try {
-                    printerJob.setPrintService(printService[selectedService]);
-
-                } catch (Exception e) {
-
-                    System.out.println(e);
+        new Thread(() -> {
+            TableFileControl tbControl = new TableFileControl();
+            TableFileBean tbBean = tbControl.getData(tableNo);
+            
+            DateConvert dc = new DateConvert();
+            PosControl control = new PosControl();
+            POSHWSetup POSHWSetup = control.getData(Macno);
+            ControlPrintCheckBill ctPrint = new ControlPrintCheckBill();
+            
+            try {
+                if (tbBean.getTItem() > 0 && ConfigFile.getProperties("printerStation").equals("true")) {
+                    PrintCheckBillReport report = new PrintCheckBillReport();
+                    
+                    // open connection
+                    report.openConnection();
+                    
+                    String sourceFileName = "D:\\Code JavaFrom Dell\\pdaV.EngTabletOppoA12\\src\\java\\printReport\\printCheckBillReport.jrxml";
+                    sourceFileName = "D:\\Report\\printCheckBillReport.jrxml";
+                    String reportSource = JasperCompileManager.compileReportToFile(sourceFileName);
+                    // set parameters
+                    Map param = new HashMap();
+                    //Header
+                    param.put("headTitle", "*ใบตรวจสอบรายการไม่ใช่ใบเสร็จรับเงิน*");
+                    param.put("tableNo", tbBean.getTcode());
+                    param.put("heading1", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading1()));
+                    param.put("heading2", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading2()));
+                    param.put("heading3", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading3()));
+                    param.put("heading4", ThaiUtil.ASCII2Unicode(POSHWSetup.getHeading4()));
+                    param.put("textHeader", dc.dateGetToShow(dc.GetCurrentDate()) + " " + dc.GetCurrentTime() + "  Cashier:" + ThaiUtil.ASCII2Unicode(tbBean.getCashier()) + " Mac:" + tbBean.getMacNo());
+                    param.put("printerName", printerName);
+                    
+                    //Footer
+                    param.put("item", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTItem())));
+                    param.put("subTotal", ThaiUtil.ASCII2Unicode(df.format(tbBean.getTAmount())));
+                    param.put("netTotal", ThaiUtil.ASCII2Unicode(df.format(tbBean.getNetTotal())));
+                    param.put("custTomer", ThaiUtil.ASCII2Unicode(intFM.format(tbBean.getTCustomer())));
+                    param.put("textVat", ThaiUtil.ASCII2Unicode(POSHWSetup.getFootting1()));
+                    
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportSource, param, report.getConnection());
+                    
+                    //Class Printer Job
+                    PrinterJob printerJob = PrinterJob.getPrinterJob();
+                    
+                    PageFormat pageFormat = PrinterJob.getPrinterJob().defaultPage();
+                    printerJob.defaultPage(pageFormat);
+                    
+                    int selectedService = 0;
+                    
+                    AttributeSet attributeSet = new HashPrintServiceAttributeSet(new PrinterName(printerName, null));
+                    PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, attributeSet);
+                    
+                    try {
+                        printerJob.setPrintService(printService[selectedService]);
+                    } catch (PrinterException e) {
+                        System.out.println(e);
+                    }
+                    JRPrintServiceExporter exporter;
+                    PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+                    printRequestAttributeSet.add(MediaSizeName.NA_LETTER);
+                    printRequestAttributeSet.add(new Copies(1));
+                    
+                    // these are deprecated
+                    exporter = new JRPrintServiceExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, printService[selectedService]);
+                    exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printService[selectedService].getAttributes());
+                    exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
+                    exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
+                    exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
+                    exporter.exportReport();
+                    
+                    param.clear();
+                    report.closeConnection();
+                    ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
+                    Thread.sleep(100);
                 }
-                JRPrintServiceExporter exporter;
-                PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-                printRequestAttributeSet.add(MediaSizeName.NA_LETTER);
-                printRequestAttributeSet.add(new Copies(1));
-
-                // these are deprecated
-                exporter = new JRPrintServiceExporter();
-                exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, printService[selectedService]);
-                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printService[selectedService].getAttributes());
-                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
-                exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
-                exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
-                exporter.exportReport();
-
-//                    // show report viewer
-//                    JasperViewer jasperViewer = new JasperViewer(jasperPrint, true);
-//                    jasperViewer.setVisible(true);
-//                    jasperViewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                param.clear();
-                // close connection
-                report.closeConnection();
-                ctPrint.setPrintCheckBillItemAfterSendKic(tableNo);
-                Thread.sleep(100);
-            }
-
-        } catch (Exception ex) {
-            Logger.getLogger(PrintCheckBillReport.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                
+            } catch (Exception ex) {
+                Logger.getLogger(PrintCheckBillReport.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
 
@@ -190,53 +158,4 @@ public class PrintCheckBillReport {
         return connect;
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            PrintCheckBillReport print = new PrintCheckBillReport();
-//            print.ReportPrintCheckBillControl("", null, null, null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    public static void main(String[] args) throws Exception {
-//        ReportControler report = new ReportControler();
-//
-//        // open connection
-//        report.openConnection();
-//
-//        // source file
-//        String reportJasper = new File(".").getCanonicalPath() + JASPER_FILE;
-//
-//        // set parameters
-//        Map param = new HashMap();
-//        param.put("ComName","My Company 2020");
-//        param.put("ComCodeFrom","1111");
-//        param.put("ComCodeTo","1234");
-//
-//        // fill report to run jasper file
-//        JasperPrint jasperPrint = JasperFillManager.fillReport(reportJasper, param, report.getConnection());
-//
-//        // show report viewer
-//        JasperViewer jasperViewer = new JasperViewer(jasperPrint);
-//        jasperViewer.setVisible(true);
-//
-//        // close connection
-//        report.closeConnection();
-//    }
-//
-//    public Connection getConnection() throws Exception {
-//        return connect;
-//    }
-//
-//    public void closeConnection() throws Exception {
-//        if (connect != null) connect.close();
-//    }
-//
-//    public Connection openConnection() throws Exception {
-//        if (connect == null) {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            connect = DriverManager.getConnection(MYSQL_URL);
-//        }
-//        return connect;
-//    }
 }

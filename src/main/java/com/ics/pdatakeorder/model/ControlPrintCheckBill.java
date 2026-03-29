@@ -14,7 +14,6 @@ public class ControlPrintCheckBill {
     private final MySQLConnect mysql = new MySQLConnect();
 
     public void PrintCheckBill(String tableNO, boolean CheckBill, String emp, String PrinterName, String Macno) {
-
         EmployControl empc = new EmployControl();
         if (CheckBill == true) {
             emp = ThaiUtil.Unicode2ASCII(empc.empName(emp));
@@ -47,18 +46,5 @@ public class ControlPrintCheckBill {
         } finally {
             mysql.close();
         }
-    }
-
-    public void PrintUrgentFood(String tableNO) {
-        try {
-            String sql = "update kictran set R_FoodUrgent='Y',R_AlertKitChen='Y' where PTable='" + tableNO + "' and PFlage='N';";
-            mysql.open();
-            mysql.getConnection().createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 public class CompanyMenu {
     
     private String headName;
-    private List<MenuSetup> menuSetupData;
+    private final List<MenuSetup> menuSetupData;
     public static final String TYPE_PRODUCT = "P";
     public static final String TYPE_GROUP = "S";
     

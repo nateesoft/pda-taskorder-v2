@@ -1,6 +1,5 @@
 package com.ics.pdatakeorder.model;
 
-import com.ics.pdatakeorder.control.BranchControl;
 import java.util.Date;
 
 public class BranchBean {
@@ -140,10 +139,6 @@ public class BranchBean {
     private String KicChk18 = "N";
     private String KicChk19 = "N";
     private String KicChk20 = "N";
-    
-    public static BranchBean Bean(){
-        return new BranchControl().getData();
-    }
 
     public String getCode() {
         return Code;
@@ -1224,6 +1219,5 @@ public class BranchBean {
     public void setKicChk20(String KicChk20) {
         this.KicChk20 = KicChk20;
     }
-    
-    
+
 }

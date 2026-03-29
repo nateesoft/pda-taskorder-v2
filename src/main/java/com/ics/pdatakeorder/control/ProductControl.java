@@ -22,7 +22,6 @@ public class ProductControl {
 
         try {
             mysql.open();
-
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 while (rs.next()) {
                     productBean.setPCode(rs.getString("PCode"));
@@ -87,7 +86,7 @@ public class ProductControl {
         } finally {
             mysql.close();
         }
-        
+
         return productBean;
     }
 

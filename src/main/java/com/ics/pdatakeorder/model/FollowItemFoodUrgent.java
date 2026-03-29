@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ics.pdatakeorder.model;
 
 import com.ics.pdatakeorder.db.MySQLConnect;
 import com.ics.pdatakeorder.util.ThaiUtil;
+import java.sql.SQLException;
 
 /**
  *
@@ -25,7 +21,7 @@ public class FollowItemFoodUrgent {
                     + "and ptable='" + tableNo + "';";
             mysql.open();
             mysql.getConnection().createStatement().executeUpdate(sql);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.toString());
         } finally {
             mysql.close();

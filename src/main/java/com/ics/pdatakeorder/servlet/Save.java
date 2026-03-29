@@ -44,7 +44,8 @@ public class Save extends HttpServlet {
         String MACNO = (String) session.getAttribute("macno");
         String R_Table = ((String) session.getAttribute("tableNo"));
 
-        if (TableFileControl.checkBillReady(R_Table)) {
+        TableFileControl tableFileControl = new TableFileControl();
+        if (tableFileControl.checkBillReady(R_Table)) {
             listBalance.add("โต๊ะนี้พิมพ์บิลแล้วไม่สามารถสั่งอาหารได้(กำลังเช็คบิล)");
         } else {
             String EMP = (String) session.getAttribute("empCode");

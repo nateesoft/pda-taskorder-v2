@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ics.pdatakeorder.model;
-////
 
 import com.ics.pdatakeorder.control.ProductControl;
 import com.ics.pdatakeorder.db.MySQLConnect;
@@ -152,28 +146,6 @@ public class PKicTran {
             
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-    }
-
-    public static void setPKicTranAgainByItem(String TableNo, String pcode, String pname, String pindex) {
-        DateConvert dc = new DateConvert();
-        try {
-            String sql = "update kictran set R_AlertKitChen='N',R_FoodUrgent='Y',R_UrgentFoodItemName='" + ThaiUtil.Unicode2ASCII(pname) + "' "
-                    + "where ptable='" + ThaiUtil.Unicode2ASCII(TableNo) + "' "
-                    + "and PFlage='N' and pcode='" + pcode + "', and pindex='" + pname + "' ;";
-            mysql.open();
-            mysql.getConnection().createStatement().executeUpdate(sql);
-
-            String sqlInsTemp = "insert into kictran_logUrgent (select * from kictran where ptable='" + TableNo + "');";
-            mysql.getConnection().createStatement().executeUpdate(sqlInsTemp);
-
-            String sqlInsLog = "insert into kictran_urgentclick (pTable,pDate,pTime) values('" + TableNo + "','" + dc.GetCurrentDate() + "','" + dc.GetCurrentTime() + "');";
-            mysql.getConnection().createStatement().executeUpdate(sqlInsLog);
-
-        } catch (SQLException e) {
-            System.out.println(e.toString());
         } finally {
             mysql.close();
         }

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.ics.pdatakeorder.model;
 
 /**
@@ -17,7 +11,7 @@ public class Option {
         String PLUCode = PLU;
         String QTY = "1.00";
         
-        if(PLU.indexOf("*")!=-1){
+        if(PLU.contains("*")){
             int indexStar = PLU.indexOf("*");
             if(indexStar>0){
                 PLUCode = PLU.substring(indexStar+1, PLUCode.length());

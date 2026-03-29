@@ -22,10 +22,9 @@ public class BranchControl {
 
     public static void updateKicItemNo() {
         branchBean = null;
-        
+
         try {
             mysql.open();
-            
             String sql = "update branch set KicItemNo=KicItemNo+1";
             mysql.getConnection().createStatement().executeUpdate(sql);
         } catch (SQLException e) {
@@ -42,7 +41,6 @@ public class BranchControl {
 
         try {
             mysql.open();
-            
             String sql = "select * from branch";
             try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
                 if (rs.next()) {
@@ -195,35 +193,6 @@ public class BranchControl {
         }
 
         return branchBean;
-    }
-
-    public static String[] getKicData20() {
-        BranchBean bb = BranchControl.getData();
-        String[] kic;
-
-        kic = new String[]{bb.getKIC1(), bb.getKIC2(), bb.getKIC3(), bb.getKIC4(), bb.getKIC5(), bb.getKIC6(), bb.getKIC7(), bb.getKIC8(), bb.getKIC9(), bb.getKic10(), bb.getKic11(), bb.getKic12(), bb.getKic13(), bb.getKic14(), bb.getKic15(), bb.getKic16(), bb.getKic17(), bb.getKic18(), bb.getKic19(), bb.getKic20()};
-
-        return kic;
-    }
-
-    public static String getForm(String kicNo) {
-        String form = "1";
-
-        mysql.open();
-        try {
-            String sql = "select KICCopy" + kicNo + " from branch";
-            try (ResultSet rs = mysql.getConnection().createStatement().executeQuery(sql)) {
-                if (rs.next()) {
-                    form = rs.getString(1);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        return form;
     }
 
 }

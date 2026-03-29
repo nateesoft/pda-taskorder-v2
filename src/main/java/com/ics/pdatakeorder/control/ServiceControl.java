@@ -10,14 +10,9 @@ import java.util.List;
 public class ServiceControl {
 
     private final MySQLConnect mysql = new MySQLConnect();
-    private final PosControl posControl;
-
-    public ServiceControl() {
-        posControl = new PosControl();
-    }
+    private final PosControl posControl = new PosControl();
 
     public void updateService(String table) {
-
         try {
             BalanceControl balanceControl = new BalanceControl();
             List<BalanceBean> dataBalance = balanceControl.getAllBalance(table);

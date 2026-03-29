@@ -10,12 +10,6 @@ import java.util.List;
 public class ControlMenu {
 
     private final MySQLConnect mysql = new MySQLConnect();
-    private final List<CompanyMenu> companyMenu;
-    int size = 0;
-
-    public ControlMenu() {
-        companyMenu = new ArrayList<>();
-    }
 
     public List<MenuSetup> getDataMenu(String prefix) {
         List<MenuSetup> listMenu = new ArrayList<>();
@@ -186,73 +180,4 @@ public class ControlMenu {
         return hMenu.split(",", hMenu.length());
     }
 
-    public List<CompanyMenu> getAllMenu() {
-        String sqlHead = "select head1, head2, head3, head4 from headmenu";
-        try {
-            mysql.open();
-            ResultSet rs = mysql.getConnection().createStatement().executeQuery(sqlHead);
-            if (rs != null) {
-                if (rs.next()) {
-                    String head1 = ThaiUtil.ASCII2Unicode(rs.getString("head1"));
-                    String head2 = ThaiUtil.ASCII2Unicode(rs.getString("head2"));
-                    String head3 = ThaiUtil.ASCII2Unicode(rs.getString("head3"));
-                    String head4 = ThaiUtil.ASCII2Unicode(rs.getString("head4"));
-                    String sql;
-                    CompanyMenu headMenu;
-                    String[] head = (head1 + "," + head2 + "," + head3 + "," + head4).split(",");
-                    String[] mmenu = ("A,B,C,D").split(",");
-                    int index = 0;
-
-                    for (String h : head) {
-                        if (h != null) {
-                            headMenu = new CompanyMenu();
-                            headMenu.setHeadName(h.trim());
-
-                            sql = "select * from menusetup "
-                                    + "where code_id like '" + mmenu[index] + "%' "
-                                    + "and Code_Type='" + CompanyMenu.TYPE_GROUP + "' "
-                                    + "group by Code_ID";
-                            try (ResultSet rs1 = mysql.getConnection().createStatement().executeQuery(sql)) {
-                                while (rs1.next()) {
-                                    MenuSetup menu = new MenuSetup();
-                                    menu.setCode_ID(rs1.getString("Code_ID"));
-                                    menu.setCode_Type(rs1.getString("Code_Type"));
-                                    menu.setPCode(rs1.getString("PCode"));
-                                    menu.setShortName(ThaiUtil.ASCII2Unicode(rs1.getString("ShortName")));
-                                    menu.setPPathName(ThaiUtil.ASCII2Unicode(rs1.getString("PPathName")));
-                                    
-                                    String sqlProduct = "select * from menusetup "
-                                            + "where Code_Id like '" + menu.getCode_ID() + "%' "
-                                            + "and Code_Type='" + CompanyMenu.TYPE_PRODUCT + "' "
-                                            + "and shortName<>'' "
-                                            + "group by Code_ID";
-                                    try (ResultSet rs2 = mysql.getConnection().createStatement().executeQuery(sqlProduct)) {
-                                        while (rs2.next()) {
-                                            ProductBean product = new ProductBean();
-                                            product.setPCode(rs2.getString("Code_ID"));
-                                            product.setPDesc(ThaiUtil.ASCII2Unicode(rs2.getString("ShortName")));
-                                            
-                                            menu.addProduct(product);
-                                        }
-                                    }
-                                    headMenu.addMenuSetup(menu);
-                                }
-                            }
-                            companyMenu.add(headMenu);
-                            size++;
-                        }
-                        index++;
-                    }
-                }
-                rs.close();
-
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            mysql.close();
-        }
-
-        return companyMenu;
-    }
 }

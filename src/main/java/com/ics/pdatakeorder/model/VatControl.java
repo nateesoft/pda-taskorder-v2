@@ -10,10 +10,8 @@ public class VatControl {
     TableFileControl tfControl = null;
     TableFileBean tBean = null;
     private double Vat = 0.00;
-//    private MySQLConnect mysql = new MySQLConnect();
 
     public VatControl(String tableNo) {
-
         this.tableNo = tableNo;
         vatType = POSConfigSetup.Bean().getP_VatType();
         Vat = POSConfigSetup.Bean().getP_Vat();

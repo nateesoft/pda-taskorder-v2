@@ -5,7 +5,6 @@ import com.ics.pdatakeorder.model.POSConfigSetup;
 import com.ics.pdatakeorder.db.MySQLConnect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.ics.pdatakeorder.util.MSG;
 import com.ics.pdatakeorder.util.ThaiUtil;
 
 public class PosControl {
@@ -14,16 +13,13 @@ public class PosControl {
     private POSConfigSetup posConfigSetup = null;
     private POSHWSetup poshwsetup = null;
 
-    public PosControl() {
-    }
-
     public POSConfigSetup getData() {
         if (posConfigSetup != null) {
             return posConfigSetup;
         }
 
         posConfigSetup = new POSConfigSetup();
-        
+
         try {
             mysql.open();
             String sql = "select * from posconfigsetup";

@@ -1,17 +1,6 @@
 package com.ics.pdatakeorder.control;
 
-import java.text.DecimalFormat;
-
 public class NumberControl {
-
-    public static String format(double data) {
-        DecimalFormat df1 = new DecimalFormat("#,##0.00");
-        return df1.format(data);
-    }
-
-    public static int TO_INT(double data) {
-        return (int) data;
-    }
 
     public static double UP_DOWN_25(double d) {
         String money = "" + d;
